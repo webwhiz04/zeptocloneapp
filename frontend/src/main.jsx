@@ -7,16 +7,21 @@ import AdminDashboard from "./pages/admindashboard.jsx";
 import AddProduct from "./pages/addproduct.jsx";
 import ViewProduct from "./pages/viewproduct.jsx";
 import AdminUserOrders from "./pages/adminuserorders.jsx";
+import AdminLayout from "./components/AdminLayout.jsx";
+
+const AdminWrapper = ({ children }) => (
+    <AdminLayout>{children}</AdminLayout>
+);
 
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>
         <Routes>
             <Route path="/*" element={<App />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/admindashboard" element={<AdminDashboard />} />
-            <Route path="/admindashboard/addproduct" element={<AddProduct />} />
-            <Route path="/admindashboard/viewproduct" element={<ViewProduct />} />
-            <Route path="/admindashboard/user" element={<AdminUserOrders />} />
+            <Route path="/admindashboard" element={<AdminWrapper><AdminDashboard /></AdminWrapper>} />
+            <Route path="/admindashboard/addproduct" element={<AdminWrapper><AddProduct /></AdminWrapper>} />
+            <Route path="/admindashboard/viewproduct" element={<AdminWrapper><ViewProduct /></AdminWrapper>} />
+            <Route path="/admindashboard/user" element={<AdminWrapper><AdminUserOrders /></AdminWrapper>} />
         </Routes>
     </BrowserRouter>
 );

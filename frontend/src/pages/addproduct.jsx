@@ -187,91 +187,116 @@ function AddProduct({
     };
 
     return (
-        <div className={`addproduct${embedded ? " embedded" : ""}`}>
-            <form className="form" onSubmit={handleSubmit} autoComplete="off">
-                <h2>{editMode ? "Edit Product" : "Add Product"}</h2>
+        <div className={`add-product-container${embedded ? " embedded" : ""}`}>
+            <form className="admin-form" onSubmit={handleSubmit} autoComplete="off">
+                <header className="admin-content-header">
+                    <h1>{editMode ? "Edit Product" : "Add Product"}</h1>
+                </header>
+                
+                {message && <p className={`form-message ${message.includes("successfully") ? "success" : "error"}`}>{message}</p>}
                 {loading && <p className="form-message">Loading product...</p>}
 
-                <label htmlFor="productName">Product Name</label>
-                <input
-                    id="productName"
-                    type="text"
-                    autoComplete="off"
-                    placeholder="Enter product name"
-                    value={productName}
-                    onChange={(event) => setProductName(event.target.value)}
-                />
+                <div className="form-grid">
+                    <div className="form-group">
+                        <label htmlFor="productName">Product Name</label>
+                        <input
+                            id="productName"
+                            type="text"
+                            autoComplete="off"
+                            placeholder="Enter product name"
+                            value={productName}
+                            onChange={(e) => setProductName(e.target.value)}
+                        />
+                    </div>
 
-                <label htmlFor="price">Price</label>
-                <input
-                    id="price"
-                    type="number"
-                    min="0"
-                    step="1"
-                    autoComplete="off"
-                    placeholder="Enter product price"
-                    value={price}
-                    onChange={(event) => setPrice(event.target.value)}
-                />
-                <label htmlFor="categories">Category</label>
-                <select
-                    id="categories"
-                    value={categories[0] || ""}
-                    onChange={(event) => {
-                        const selectedValue = event.target.value;
-                        setCategories(selectedValue ? [selectedValue] : []);
-                    }}
-                >
-                   <option  hidden value="">Select category</option>
-                    {options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="price">Price (₹)</label>
+                            <input
+                                id="price"
+                                type="number"
+                                step="0.01"
+                                placeholder="0.00"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                            />
+                        </div>
 
-                <label htmlFor="quantity">Quantity</label>
-                <input
-                    id="quantity"
-                    type="text"
-                    autoComplete="off"
-                    placeholder="Enter quantity (example: 1kg, 2 packs)"
-                    value={quantity}
-                    onChange={(event) => setQuantity(event.target.value)}
-                />
+                        <div className="form-group">
+                            <label htmlFor="quantity">Stock Quantity</label>
+                            <input
+                                id="quantity"
+                                type="number"
+                                placeholder="0"
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value)}
+                            />
+                        </div>
+                    </div>
 
-                <label htmlFor="image">Product Image</label>
-                <input
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={(event) => setImageFile(event.target.files?.[0] || null)}
-                />
-                {editMode && currentImage && !imageFile && (
-                    <img src={getImageUrl(currentImage)} alt="Current product" className="img" />
-                )}
-                {editMode && <p className="image-hint">Choose a new image only if you want to replace the old one.</p>}
+                    <div className="form-group">
+                        <label>Categories</label>
+                        <div className="category-selection">
+                            {options.map((opt) => (
+                                <label key={opt.value} className="category-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        value={opt.value}
+                                        checked={categories.includes(opt.value)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setCategories([...categories, opt.value]);
+                                            } else {
+                                                setCategories(categories.filter(c => c !== opt.value));
+                                            }
+                                        }}
+                                    />
+                                    <span>{opt.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
 
-                <label htmlFor="description">Description</label>
-                <textarea
-                    id="description"
-                    autoComplete="off"
-                    placeholder="Enter product description"
-                    value={description}
-                    onChange={(event) => setDescription(event.target.value)}
-                    rows="4"
-                />
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            id="description"
+                            placeholder="Product description..."
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            rows={4}
+                        />
+                    </div>
 
-                {message && <p className="form-message">{message}</p>}
+                    <div className="form-group">
+                        <label htmlFor="image">Product Image</label>
+                        <div className="image-upload-area">
+                            <input
+                                id="image"
+                                type="file"
+                                accept="image/*"
+                                ref={fileInputRef}
+                                onChange={(e) => setImageFile(e.target.files[0])}
+                            />
+                            {currentImage && !imageFile && (
+                                <div className="current-image-preview">
+                                    <p>Current Image:</p>
+                                    <img src={getImageUrl(currentImage)} alt="current" />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
 
-                <div className="formadd">
-                    <button type="submit" className="save" disabled={saving}>
+                <div className="form-actions">
+                    <button className="save-btn" type="submit" disabled={saving}>
                         {saving ? "Saving..." : editMode ? "Update Product" : "Save Product"}
                     </button>
-                    <button type="button" className="back" onClick={handleClose}>
-                        {editMode ? "Cancel" : "Back"}
-                    </button>
+                    {editMode && (
+                        <button className="cancel-btn" type="button" onClick={handleClose}>
+                            Cancel
+                        </button>
+                    )}
                 </div>
             </form>
         </div>

@@ -278,11 +278,12 @@ export const getOrders = async (req, res) => {
 
 export const getAdminOrders = async (_req, res) => {
   try {
-    const users = await User.find({ "orders.0": { $exists: true } })
+    const users = await User.find({})
       .select("email orders")
       .lean();
     const orders = users.flatMap((user) => {
-      return (Array.isArray(user.orders) ? user.orders : []).map((order) => ({
+      const userOrders = Array.isArray(user.orders) ? user.orders : [];
+      return userOrders.map((order) => ({
         userEmail: user.email,
         orderKey: getOrderKey(order),
         ...order,

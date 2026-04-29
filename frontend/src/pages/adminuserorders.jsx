@@ -128,134 +128,115 @@ function AdminUserOrders() {
     };
 
     return (
-        <section className="adminuserspage">
-            <div className="adminuserswrap">
-                <header className="adminusersheader">
-                    <div>
-                        <p className="adminuserseyebrow"></p>
-                        <h1>User Orders</h1> 
+        <div className="admin-orders-container">
+            <header className="admin-content-header">
+                <h1>User Orders</h1>
+                <button type="button" className="refresh-btn" onClick={loadOrders}>
+                    Refresh
+                </button>
+            </header>
+
+            {errorMessage ? <p className="admin-error">{errorMessage}</p> : null}
+
+            {isLoading ? (
+                <div className="admin-loading-card">Loading user orders...</div>
+            ) : groupedOrders.length === 0 ? (
+                <div className="admin-empty-card">No orders available.</div>
+            ) : (
+                <div className="orders-table-card">
+                    <div className="table-wrap">
+                        <table className="admin-orders-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Ordered At</th>
+                                    <th>Shipping</th>
+                                    <th>Products</th>
+                                    <th>Payment</th>
+                                    <th>Total</th>
+                                    <th>Current Status</th>
+                                    <th>Update Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {groupedOrders.map((order) => {
+                                    const orderKey = String(order.orderKey || order.paymentDetails?.paymentId || order.paymentDetails?.orderId || order.orderedAt || "");
+                                    const status = selectedStatuses[orderKey] || order.status || "Placed";
+                                    const items = Array.isArray(order.items) ? order.items : [];
+                                    const addressLines = formatAddressLines(order.shippingAddress || {});
+
+                                    return (
+                                        <tr key={`${order.userEmail}-${orderKey}`}>
+                                            <td className="user-cell">
+                                                <div className="cell-stack">
+                                                    <span className="order-email">{order.userEmail}</span>
+                                                    <span className="order-key">ID: {orderKey || "N/A"}</span>
+                                                </div>
+                                            </td>
+                                            <td className="date-cell">
+                                                <span className="cell-meta">{formatDateTime(order.orderedAt || order.paymentDetails?.paidAt)}</span>
+                                            </td>
+                                            <td className="address-cell">
+                                                <div className="address-stack">
+                                                    {addressLines.map((line) => (
+                                                        <p key={line}>{line}</p>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="products-cell">
+                                                <div className="products-list">
+                                                    {items.map((item, index) => (
+                                                        <div className="product-row" key={`${item.productId}-${index}`}>
+                                                            <img src={getImageUrl(item.image)} alt={item.name} />
+                                                            <span className="product-name-mini">{item.name} x {item.quantity}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="payment-cell">
+                                                <div className="cell-stack">
+                                                    <span className="method-tag">{order.paymentDetails?.method || "COD"}</span>
+                                                    <span className="payment-id">{order.paymentDetails?.paymentId || "N/A"}</span>
+                                                </div>
+                                            </td>
+                                            <td className="total-cell">
+                                                <strong className="total-amount">{formatMoney(order.totalAmount)}</strong>
+                                            </td>
+                                            <td className="status-cell">
+                                                <span className={`status-badge ${order.status?.toLowerCase()}`}>{order.status || "Placed"}</span>
+                                            </td>
+                                            <td className="action-cell">
+                                                <div className="status-actions">
+                                                    <select
+                                                        value={status}
+                                                        onChange={(e) => handleStatusChange(orderKey, e.target.value)}
+                                                        disabled={updatingKey === orderKey}
+                                                    >
+                                                        {STATUS_OPTIONS.map((opt) => (
+                                                            <option key={opt} value={opt}>
+                                                                {opt}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <button
+                                                        type="button"
+                                                        className="save-status-btn"
+                                                        onClick={() => handleUpdateStatus(order)}
+                                                        disabled={updatingKey === orderKey}
+                                                    >
+                                                        {updatingKey === orderKey ? "Saving..." : "Save"}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                     </div>
-                    <button type="button" className="refreshbtn" onClick={loadOrders}>
-                        Refresh
-                    </button>
-                </header>
-
-                {errorMessage ? <p className="adminuserserror">{errorMessage}</p> : null}
-
-                {isLoading ? (
-                    <div className="adminuserscard emptystate">Loading user orders...</div>
-                ) : groupedOrders.length === 0 ? (
-                    <div className="adminuserscard emptystate">No orders available.</div>
-                ) : (
-                    <div className="adminuserscard tablecard">
-                        <div className="tablewrap">
-                            <table className="ordersdatatable">
-                                <thead>
-                                    <tr>
-                                        <th>User</th>
-                                        <th>Ordered At</th>
-                                        <th>Shipping</th>
-                                        <th>Products</th>
-                                        <th>Payment</th>
-                                        <th>Total</th>
-                                        <th>Current Status</th>
-                                        <th>Update Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {groupedOrders.map((order) => {
-                                        const orderKey = String(order.orderKey || order.paymentDetails?.paymentId || order.paymentDetails?.orderId || order.orderedAt || "");
-                                        const status = selectedStatuses[orderKey] || order.status || "Placed";
-                                        const items = Array.isArray(order.items) ? order.items : [];
-                                        const addressLines = formatAddressLines(order.shippingAddress || {});
-
-                                        return (
-                                            <tr key={`${order.userEmail}-${orderKey}`}>
-                                                <td>
-                                                    <div className="cellstack">
-                                                        <span className="orderemail">{order.userEmail}</span>
-                                                        <span className="cellmeta">Order: {orderKey || "N/A"}</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span className="cellmeta">{formatDateTime(order.orderedAt || order.paymentDetails?.paidAt)}</span>
-                                                </td>
-                                                <td>
-                                                    <div className="cellstack">
-                                                        {addressLines.length > 0 ? (
-                                                            addressLines.map((line) => (
-                                                                <span key={`${orderKey}-${line}`} className="cellmeta">{line}</span>
-                                                            ))
-                                                        ) : (
-                                                            <span className="cellmeta">No shipping address</span>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="productslist">
-                                                        {items.length > 0 ? (
-                                                            items.map((item) => (
-                                                                <div className="productrow" key={`${orderKey}-${item.productId || item._id || item.name}`}>
-                                                                    <img
-                                                                        src={getImageUrl(item.image)}
-                                                                        alt={item.name}
-                                                                        onError={(event) => {
-                                                                            event.currentTarget.src = "https://via.placeholder.com/48x48?text=No+Image";
-                                                                        }}
-                                                                    />
-                                                                    <div className="cellstack">
-                                                                        <strong>{item.name}</strong>
-                                                                        <span className="cellmeta">
-                                                                            {item.quantity} x {formatMoney(item.price)}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            ))
-                                                        ) : (
-                                                            <span className="cellmeta">No products</span>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="cellstack">
-                                                        <span className="cellmeta">{order.paymentDetails?.method || "N/A"}</span>
-                                                        <span className="cellmeta">Pay ID: {order.paymentDetails?.paymentId || "N/A"}</span>
-                                                        <span className="cellmeta">Order ID: {order.paymentDetails?.orderId || "N/A"}</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <strong>{formatMoney(order.totalAmount)}</strong>
-                                                </td>
-                                                <td>
-                                                    <span className="statuspill">{order.status || "Placed"}</span>
-                                                </td>
-                                                <td>
-                                                    <div className="statusactions">
-                                                        <select value={status} onChange={(event) => handleStatusChange(orderKey, event.target.value)}>
-                                                            {STATUS_OPTIONS.map((option) => (
-                                                                <option key={option} value={option}>{option}</option>
-                                                            ))}
-                                                        </select>
-                                                        <button
-                                                            type="button"
-                                                            className="savestatusbtn"
-                                                            onClick={() => handleUpdateStatus(order)}
-                                                            disabled={updatingKey === orderKey}
-                                                        >
-                                                            {updatingKey === orderKey ? "Saving..." : "Save"}
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </section>
+                </div>
+            )}
+        </div>
     );
 }
 

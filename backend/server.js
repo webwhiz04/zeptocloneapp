@@ -11,6 +11,7 @@ import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
 import userDataRoutes from "./routes/userdata.js";
 import paymentRoutes from "./routes/payment.js";
+import adminRoutes from "./routes/admin.js";
 
 import config from "./config/config.js";
 
@@ -76,6 +77,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/userdata", userDataRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (_req, res) => {
   return res.status(200).json({ message: "Backend is running" });

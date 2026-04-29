@@ -103,82 +103,88 @@ function ViewProduct() {
     };
 
     return (
-        <div className="view">
-            <div className="viewproduct">
-                {isEdit ? (
-                    <AddProduct
-                        isEdit={isEdit}
-                        editId={editId}
-                        initialProduct={editProduct}
-                        onSuccess={onEditSuccess}
-                        onCancel={cancelEdit}
-                        embedded
-                    />
-                ) : (
-                    <>
-                        <div className="viewheader">
-                            <h2>View Product</h2>
-                            <button className="back" onClick={goBack}>Back</button>
+        <div className="view-product-container">
+            {isEdit ? (
+                <AddProduct
+                    isEdit={isEdit}
+                    editId={editId}
+                    initialProduct={editProduct}
+                    onSuccess={onEditSuccess}
+                    onCancel={cancelEdit}
+                    embedded
+                />
+            ) : (
+                <div className="view-table-section">
+                    <div className="viewheader">
+                        <h2>Manage Products</h2>
+                        <div className="view-actions">
+                            <span className="product-count">{products.length} Products</span>
                         </div>
-                        {message && <p className="message">{message}</p>}
+                    </div>
+                    {message && <p className={`message ${message.includes("removed") ? "success" : ""}`}>{message}</p>}
 
-                        <div className="producttable">
-                            <table className="product">
-                                <thead>
+                    <div className="product-table-card">
+                        <table className="admin-product-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Categories</th>
+                                    <th>Stock</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {products.length === 0 && (
                                     <tr>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Price</th>
-                                        <th>Categories</th>
-                                        <th>Quantity</th>
-                                        <th>Description</th>
-                                        <th>Actions</th>
+                                        <td colSpan={7} className="empty-row">No products found</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {products.length === 0 && (
-                                        <tr>
-                                            <td colSpan={7} className="empty-row">No products found</td>
-                                        </tr>
-                                    )}
-                                    {products.map((product) => (
-                                        <tr key={product._id}>
-                                            <td>
-                                                <img
-                                                    src={getImageUrl(product.image)}
-                                                    alt={product.name || "product"}
-                                                    className="img"
-                                                />
-                                            </td>
-                                            <td>
-                                                <span className="product-name">{getDisplayValue(product.name)}</span>
-                                            </td>
-                                            <td>
-                                                {getDisplayValue(product.price)}
-                                            </td>
-                                            <td>
-                                                {product.categories?.length > 0 ? product.categories.join(", ") : "-"}
-                                            </td>
-                                            <td>
-                                                {getDisplayValue(product.quantity)}
-                                            </td>
-                                            <td>
-                                                <span className="product-description">{getDisplayValue(product.description)}</span>
-                                            </td>
-                                            <td>
-                                                <div className="action">
-                                                    <button type="button" className="edit" onClick={() => startEdit(product)}>Edit</button>
-                                                    <button type="button" className="remove" onClick={() => removeProduct(product._id)}>Remove</button>
+                                )}
+                                {products.map((product) => (
+                                    <tr key={product._id}>
+                                        <td className="img-cell">
+                                            <img
+                                                src={getImageUrl(product.image)}
+                                                alt={product.name || "product"}
+                                                className="table-img"
+                                            />
+                                        </td>
+                                        <td className="name-cell">
+                                            <span className="product-name">{getDisplayValue(product.name)}</span>
+                                        </td>
+                                        <td className="price-cell">
+                                            ₹{getDisplayValue(product.price)}
+                                        </td>
+                                        <td className="category-cell">
+                                            {product.categories?.length > 0 ? (
+                                                <div className="tag-container">
+                                                    {product.categories.map(cat => <span key={cat} className="category-tag">{cat}</span>)}
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </>
-                )}
-            </div>
+                                            ) : "-"}
+                                        </td>
+                                        <td className="stock-cell">
+                                            <span className={`stock-status ${product.quantity > 0 ? "in-stock" : "out-of-stock"}`}>
+                                                {getDisplayValue(product.quantity)}
+                                            </span>
+                                        </td>
+                                        <td className="desc-cell">
+                                            <span className="product-description">{getDisplayValue(product.description)}</span>
+                                        </td>
+                                        <td className="action-cell">
+                                            <div className="action-buttons">
+                                                <button type="button" className="edit-btn" onClick={() => startEdit(product)}>Edit</button>
+                                                <button type="button" className="remove-btn" onClick={() => removeProduct(product._id)}>Remove</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

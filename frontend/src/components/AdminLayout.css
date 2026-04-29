@@ -1,0 +1,102 @@
+.admin-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.admin-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background-color: #3e0075;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar-header {
+    padding: 25px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+}
+
+.admin-logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-zepto-logo {
+    height: 30px;
+    width: auto;
+    filter: brightness(0) invert(1); /* Makes the logo white for the dark sidebar */
+}
+
+.logo-text-admin {
+    color: #ff3366;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.admin-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left: 4px solid #ffffff;
+}
+
+.admin-nav-icon {
+    margin-right: 15px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.admin-main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 70px;
+    }
+    .admin-nav-label {
+        display: none;
+    }
+    .admin-nav-icon {
+        margin-right: 0;
+        font-size: 20px;
+    }
+    .admin-nav-item {
+        justify-content: center;
+        padding: 15px;
+    }
+}
