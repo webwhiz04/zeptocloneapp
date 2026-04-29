@@ -1,8 +1,22 @@
 .categorypage {
-    margin-top: 92px;
-    padding: 24px 36px;
-    min-height: calc(100vh - 92px);
-    background: linear-gradient(180deg, #fff8f8 0%, #ffffff 35%);
+    padding: 24px 5%;
+    max-width: 1440px;
+    margin: 0 auto;
+    background: #ffffff;
+}
+
+.section-header {
+    margin: 32px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0;
 }
 .product {
     display: grid;

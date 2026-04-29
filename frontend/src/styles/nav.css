@@ -1,247 +1,193 @@
-.navbar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
+.nav-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     background-color: #fff;
-    padding: 8px 40px 0;
-    z-index: 500;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 1000;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
 }
 
-.logo {
-
-    font-size: 26px;
-    font-weight: bold;
-}
-
-.logo-area {
-    display: inline-flex;
-    align-items: center;
-}
-
-.logo-area img {
-    height: 30px;
-}
-
-.user-area {
-    position: relative;
-    margin-left: 20px;
-}
-
-.user-trigger {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    font-size: 22px;
-    padding: 0;
-}
-
-.user-trigger:hover {
-    color: #6c2bd9;
-}
-
-.user-popup {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    min-width: 160px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    padding: 10px;
+.navbar {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 600;
-}
-
-.popup-user-name {
-    display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 6px;
-    color: #333;
-    font-weight: 600;
-}
-
-.logout-btn {
-    border: none;
-    background: #ef4444;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 6px;
-    padding: 8px 10px;
-    cursor: pointer;
-}
-
-.logout-btn:hover {
-    background: #dc2626;
+    height: 72px;
+    padding: 0 5%;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .leftnav {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 32px;
+    flex: 0 0 auto;
+}
 
+.logo-area img {
+    height: 32px;
 }
 
 .loc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 14px;
-    color: #555;
+    font-weight: 700;
+    color: #1a1a1a;
     cursor: pointer;
-    padding: 10px 20px;
+}
+
+.loc .arrow {
+    font-size: 12px;
+    color: #777;
 }
 
 .centernav {
     flex: 1;
-    display: flex;
-    justify-content: center;
-    position: relative;
+    max-width: 600px;
+    margin: 0 40px;
 }
 
 .search-wrapper {
     position: relative;
-    width: 100%;
-    max-width: 450px;
     display: flex;
     align-items: center;
-}
-
-.icon {
-    position: absolute;
-    left: 12px;
-    height: 1.5rem;
-    width: 1.5rem;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    color: #666;
-}
-
-.centernav input {
-    width: 100%;
-    padding: 8px 15px 8px 40px;
-    box-sizing: border-box;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background: #f3f4f6;
-    outline: none;
+    background-color: #f3f4f6;
+    border-radius: 12px;
+    padding: 0 16px;
+    height: 48px;
+    border: 1px solid transparent;
     transition: all 0.2s ease;
 }
 
-.centernav input:focus {
-    background: #fff;
+.search-wrapper:focus-within {
+    background-color: #fff;
     border-color: #6c2bd9;
     box-shadow: 0 0 0 3px rgba(108, 43, 217, 0.1);
 }
 
-.searchinput {
-    width: 100%;
+.search-wrapper .icon {
+    color: #6b7280;
+    font-size: 20px;
+    display: flex;
 }
 
-.rightnav a {
-    margin-left: 20px;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
+.searchinput {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 0 12px;
+    font-size: 15px;
+    color: #1a1a1a;
+    outline: none;
 }
 
 .rightnav {
     display: flex;
     align-items: center;
+    gap: 24px;
+    flex: 0 0 auto;
 }
 
-.rightnav .login-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.rightnav a:hover {
-    color: #6c2bd9;
-}
-
-.categories {
+.nav-icon-wrap {
     display: flex;
-    flex: 0 0 100dvw;
-    width: 100dvw;
-    order: 4;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 30px;
-    padding: 10px 40px;
-    border-top: 1px solid #eee;
-    background: #fff;
-    margin-top: 8px;
-    margin-left: calc(50% - 50dvw);
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #374151;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.categories a {
+.nav-icon-wrap svg {
+    font-size: 22px;
+}
+
+.nav-icon-wrap span {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.nav-icon-wrap:hover {
+    color: #6c2bd9;
+}
+
+.user-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.category-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 5% 12px;
+    max-width: 1440px;
+    margin: 0 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.category-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.cat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     text-decoration: none;
-    color: #444;
-    font-weight: 500;
-    position: relative;
-    padding-bottom: 6px;
-    transition: color 0.2s ease;
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: all 0.2s;
 }
 
-.categories a:hover {
+.cat-item:hover {
+    background-color: #f3f4f6;
+    color: #1a1a1a;
+}
+
+.cat-item.active {
+    background-color: #f3f4f6;
     color: #6c2bd9;
+    box-shadow: inset 0 -2px 0 #6c2bd9;
+    border-radius: 0;
 }
 
-.categories .active {
-    color: #6c2bd9;
-    border-bottom: none;
-    padding-bottom: 0;
+.cat-icon {
+    font-size: 16px;
 }
 
-* {
-    box-sizing: border-box;
+@media (max-width: 1024px) {
+    .centernav {
+        margin: 0 20px;
+    }
+    .leftnav {
+        gap: 16px;
+    }
 }
 
 @media (max-width: 768px) {
-
     .navbar {
+        height: auto;
         padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
     }
-
-    .leftnav {
-        gap: 10px;
-    }
-
-    .loc {
-        padding: 6px 8px;
-        font-size: 12px;
-    }
-
     .centernav {
-        order: 3;
-        flex-basis: 100%;
-        margin-top: 10px;
-    }
-
-    .centernav input {
+        max-width: 100%;
+        margin: 0;
         width: 100%;
-        max-width: none;
     }
-
-    .categories {
-        padding: 10px 16px;
-        gap: 16px;
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+    .rightnav {
+        width: 100%;
+        justify-content: space-around;
     }
-
 }

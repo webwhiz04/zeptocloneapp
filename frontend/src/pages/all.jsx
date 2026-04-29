@@ -52,6 +52,9 @@ function AllPage() {
     return (
         <div className="categorypage">
             <Banners />
+            <div className="section-header">
+                <h2 className="section-title">All Products</h2>
+            </div>
             <div className="product">
                 {products.map((product) => (
                     <div

@@ -25,7 +25,8 @@ const allowedOrigins = [
   clientOrigin,
   "http://127.0.0.1:5173",
   "https://zeptoclone.vercel.app",
-  "https://zeptoclone-git-main-preethampoojary443s-projects.vercel.app"
+  "https://zeptoclone-git-main-preethampoojary443s-projects.vercel.app",
+  "https://workspace-nine-iota.vercel.app"
 ];
 
 const uploadsDir = path.join(__dirname, "uploads");
@@ -54,13 +55,16 @@ app.use("/api/", limiter);
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       
-      const isAllowed = allowedOrigins.some(allowed => origin.startsWith(allowed));
+      const isAllowed = allowedOrigins.some(allowed => origin.startsWith(allowed)) || 
+                        origin.endsWith(".vercel.app"); // Allow all vercel deployments
       
       if (isAllowed) {
         callback(null, true);
       } else {
+        console.warn(`CORS blocked for origin: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
