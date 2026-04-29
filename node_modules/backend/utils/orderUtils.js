@@ -8,8 +8,8 @@ export const formatCurrencyInr = (amount) => {
   }
 
   return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
+    style: "decimal",
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
 };

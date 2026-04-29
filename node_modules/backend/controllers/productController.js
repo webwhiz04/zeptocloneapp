@@ -148,35 +148,17 @@ export const updateProduct = async (req, res) => {
       product.image = `uploads/${req.file.filename}`;
     }
 
-    const parsedCategories =
-      categories !== undefined
-        ? normalizeCategories(categories, product.categories)
-        : product.categories;
-
-    const hasQuantityInRequest = quantity !== undefined;
-    const normalizedQuantity = normalizeQuantity(quantity);
-
-    if (!Array.isArray(parsedCategories) || parsedCategories.length === 0) {
-      return res.status(400).json({ message: "At least one valid category is required" });
-    }
-
     product.name = name || product.name;
-    product.price = price ?? product.price;
-    if (hasQuantityInRequest) {
-      if (!normalizedQuantity) {
-        return res.status(400).json({ message: "Quantity is required" });
-      }
+    product.price = price || product.price;
+    product.categories = normalizeCategories(categories, product.categories);
+    product.quantity = normalizedQuantity || product.quantity;
+    product.description = description || product.description;
 
-      product.quantity = normalizedQuantity;
-    }
-    product.description = description ?? product.description;
-    product.categories = parsedCategories;
-
-    const updatedProduct = await product.save();
+    await product.save();
 
     return res.status(200).json({
       message: "Product updated successfully",
-      product: updatedProduct,
+      product,
     });
   } catch (error) {
     console.error("Update Product Error:", error);

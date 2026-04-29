@@ -1,22 +1,24 @@
 import PDFDocument from "pdfkit-table";
 import { formatCurrencyInr } from "./orderUtils.js";
+import QRCode from "qrcode";
 
-/**
- * Generates a PDF invoice buffer
- * @param {Object} order - The order object
- * @returns {Promise<Buffer>}
- */
-export const generateInvoicePdf = async (order) => {
-  return new Promise((resolve, reject) => {
+export const generateInvoicePdf = async (order, options = {}) => {
+  const baseUrl = String(options.baseUrl || "http://localhost:5173").replace(/\/$/, "");
+  const userEmail = String(options.userEmail || "");
+
+  return new Promise(async (resolve, reject) => {
     try {
       const doc = new PDFDocument({ margin: 30, size: "A4" });
       const buffers = [];
 
       doc.on("data", (chunk) => buffers.push(chunk));
-      doc.on("end", () => resolve(Buffer.concat(buffers)));
-      doc.on("error", (err) => reject(err));
+      doc.on("end", () => {
+        resolve(Buffer.concat(buffers));
+      });
+      doc.on("error", (err) => {
+        reject(err);
+      });
 
-      // Header / Logo area
       doc
         .fillColor("#e91e63")
         .fontSize(25)
@@ -28,13 +30,11 @@ export const generateInvoicePdf = async (order) => {
         .text("Mangaluru, Karnataka 575006", 30, 90)
         .text("India", 30, 105);
 
-      // Invoice Title
       doc
         .fontSize(30)
         .fillColor("#666")
         .text("INVOICE", 400, 30, { align: "right" });
 
-      // Invoice Info
       doc
         .fontSize(10)
         .fillColor("#333")
@@ -42,7 +42,21 @@ export const generateInvoicePdf = async (order) => {
         .text(`Invoice Date: ${new Date(order.orderedAt || Date.now()).toLocaleDateString("en-IN")}`, 400, 90, { align: "right" })
         .text(`Payment: ${order.paymentDetails?.method || "N/A"}`, 400, 105, { align: "right" });
 
-      // Bill To
+      const orderId = String(order.paymentDetails?.orderId || order.paymentDetails?.paymentId || "");
+      if (orderId) {
+        const orderUrl = `${baseUrl}/order-success?orderId=${encodeURIComponent(orderId)}`;
+        try {
+          const qrSize = 60;
+          const dataUrl = await QRCode.toDataURL(orderUrl, { margin: 1, width: qrSize * 2 });
+          const base64 = dataUrl.split(",")[1];
+          const imgBuffer = Buffer.from(base64, "base64");
+          doc.image(imgBuffer, 505, 120, { width: qrSize });
+          doc.fontSize(7).fillColor("#666").text("Scan to track order", 505, 120 + qrSize + 2, { width: qrSize, align: "center" });
+        } catch (err) {
+          console.warn("Header QR generation failed", err && err.message);
+        }
+      }
+
       const shipping = order.shippingAddress || {};
       doc
         .fontSize(12)
@@ -55,7 +69,6 @@ export const generateInvoicePdf = async (order) => {
         .text(`${shipping.postalCode || ""}, ${shipping.country || ""}`, 30, 195)
         .text(`Phone: ${shipping.phone || "N/A"}`, 30, 210);
 
-      // Table
       const items = Array.isArray(order.items) ? order.items : [];
       const table = {
         title: "",
@@ -65,12 +78,16 @@ export const generateInvoicePdf = async (order) => {
           { label: "Rate", property: "price", width: 100, headerColor: "#555", headerOpacity: 1 },
           { label: "Amount", property: "amount", width: 100, headerColor: "#555", headerOpacity: 1 },
         ],
-        datas: items.map((item) => ({
-          name: item.name,
-          quantity: item.quantity.toString(),
-          price: formatCurrencyInr(item.price),
-          amount: formatCurrencyInr(item.price * item.quantity),
-        })),
+        datas: items.map((item) => {
+          const qty = Number(item.quantity || 0);
+          const rate = Number(item.price || 0);
+          return {
+            name: String(item.name || "Unknown Item"),
+            quantity: qty.toString(),
+            price: formatCurrencyInr(rate),
+            amount: formatCurrencyInr(qty * rate),
+          };
+        }),
       };
 
       doc.moveDown(12);
@@ -82,7 +99,6 @@ export const generateInvoicePdf = async (order) => {
         columnsSize: [250, 50, 100, 100],
       });
 
-      // Summary
       const summaryY = doc.y + 20;
       doc
         .fontSize(10)
@@ -108,7 +124,6 @@ export const generateInvoicePdf = async (order) => {
         .text("TOTAL", 350, summaryY + 60, { width: 100, align: "left" })
         .text(formatCurrencyInr(order.totalAmount), 450, summaryY + 60, { width: 100, align: "right" });
 
-      // Footer
       doc
         .font("Helvetica")
         .fontSize(10)

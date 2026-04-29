@@ -25,12 +25,11 @@ const sendOrderConfirmationEmail = async ({ email, order, isCod = false }) => {
     return;
   }
 
-  try {
-    const transporter = createTransporter();
-    const messageText = getOrderConfirmationText({ email, order });
-    
-    // Generate Invoice PDF
-    const pdfBuffer = await generateInvoicePdf(order);
+    try {
+      const transporter = createTransporter();
+      const messageText = getOrderConfirmationText({ email, order });
+      const frontendBase = process.env.FRONTEND_BASE_URL || "http://localhost:5173";
+      const pdfBuffer = await generateInvoicePdf(order, { baseUrl: frontendBase, userEmail: email });
 
     await transporter.sendMail({
       from: getSanitizedEmailUser(),
@@ -47,7 +46,7 @@ const sendOrderConfirmationEmail = async ({ email, order, isCod = false }) => {
       ],
     });
   } catch (error) {
-    console.error("Error sending order confirmation email:", error);
+    console.error("Error in sendOrderConfirmationEmail flow:", error);
   }
 };
 
@@ -208,10 +207,6 @@ export const verifyOnlinePayment = async (req, res) => {
       return res.status(400).json({ message: "Payment signature verification failed" });
     }
 
-    // Normally we'd fetch the payment from Razorpay here to be 100% sure,
-    // but the signature verification is usually enough for most cases.
-    // For production, fetching is better.
-
     const alreadySaved = (result.user.orders || []).some(
       (order) => String(order?.paymentDetails?.paymentId || "") === String(razorpayPaymentId)
     );
@@ -231,7 +226,7 @@ export const verifyOnlinePayment = async (req, res) => {
           orderId: razorpayOrderId,
           paymentId: razorpayPaymentId,
           signature: razorpaySignature,
-          status: "captured", // We assume captured if signature matches
+          status: "captured",
           method: "online",
           amount: orderSnapshot.totalAmount,
           currency: "INR",
