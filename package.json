@@ -9,6 +9,7 @@
     "start": "npm --prefix backend start",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
-    "build:frontend": "cd frontend && npm install && node node_modules/vite/bin/vite.js build"
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm install && npx vite build"
   }
 }
