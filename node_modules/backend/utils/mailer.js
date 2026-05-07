@@ -1,22 +1,21 @@
-import { Resend } from "resend";
-
+import nodemailer from "nodemailer";
 import config from "../config/config.js";
 
 const isProduction = config.NODE_ENV === "production";
 
 export const getSanitizedEmailFrom = () => config.EMAIL_FROM?.trim() || config.EMAIL_USER?.trim();
-export const getSanitizedResendApiKey = () => config.RESEND_API_KEY?.trim();
 
 export const getMailConfigError = () => {
   const from = getSanitizedEmailFrom();
-  const apiKey = getSanitizedResendApiKey();
+  const user = config.EMAIL_USER?.trim();
+  const pass = config.EMAIL_PASS?.trim();
 
   if (!from) {
     return "EMAIL_FROM must be set in backend/.env";
   }
 
-  if (!apiKey) {
-    return "RESEND_API_KEY must be set in backend/.env";
+  if (!user || !pass) {
+    return "EMAIL_USER and EMAIL_PASS must be set in backend/.env";
   }
 
   return null;
@@ -26,20 +25,15 @@ export const getMailSendErrorMessage = (error) => {
   const message = error?.message?.toLowerCase() || "";
 
   if (
-    error?.name === "ValidationError" ||
-    message.includes("invalid from") ||
-    message.includes("invalid to") ||
-    message.includes("missing to")
+    error?.code === "EAUTH" ||
+    message.includes("authentication") ||
+    message.includes("invalid login")
   ) {
+    return "SMTP authentication failed. Check EMAIL_USER and EMAIL_PASS.";
+  }
+
+  if (message.includes("invalid to") || message.includes("invalid from") || message.includes("missing to")) {
     return "Invalid email payload. Check EMAIL_FROM, recipient address, and message fields.";
-  }
-
-  if (error?.statusCode === 401 || message.includes("unauthorized")) {
-    return "Resend authentication failed. Check RESEND_API_KEY.";
-  }
-
-  if (error?.statusCode === 429 || message.includes("rate limit")) {
-    return "Email sending was rate limited. Try again shortly.";
   }
 
   if (!isProduction && error?.message) {
@@ -49,21 +43,33 @@ export const getMailSendErrorMessage = (error) => {
   return "Server error while sending email";
 };
 
-const getResendClient = () => {
-  const apiKey = getSanitizedResendApiKey();
+const createTransporter = () => {
+  const user = config.EMAIL_USER?.trim();
+  const pass = config.EMAIL_PASS?.trim();
 
-  if (!apiKey) {
-    return null;
-  }
+  if (!user || !pass) return null;
 
-  return new Resend(apiKey);
+  const isGmail = user.endsWith("@gmail.com");
+
+  const transporter = nodemailer.createTransport(
+    isGmail
+      ? { service: "gmail", auth: { user, pass } }
+      : {
+          host: process.env.SMTP_HOST || "smtp.gmail.com",
+          port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
+          secure: process.env.SMTP_SECURE === "true",
+          auth: { user, pass },
+        }
+  );
+
+  return transporter;
 };
 
 const formatFromAddress = () => {
   const from = getSanitizedEmailFrom();
 
   if (!from) {
-    return "Zepto <onboarding@resend.dev>";
+    return "Zepto <no-reply@yourdomain.com>";
   }
 
   if (from.includes("<") && from.includes(">")) {
@@ -81,12 +87,12 @@ const normalizeAttachments = (attachments = []) =>
       const bufferContent = Buffer.isBuffer(content)
         ? content
         : typeof content === "string"
-          ? Buffer.from(content)
-          : Buffer.from(content || "");
+        ? Buffer.from(content)
+        : Buffer.from(content || "");
 
       return {
         filename: attachment.filename,
-        content: bufferContent.toString("base64"),
+        content: bufferContent,
         contentType: attachment.contentType,
       };
     });
@@ -103,28 +109,24 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     return { success: false, message: mailConfigError };
   }
 
-  const resend = getResendClient();
+  const transporter = createTransporter();
 
-  if (!resend) {
-    return { success: false, message: "RESEND_API_KEY must be set in backend/.env" };
+  if (!transporter) {
+    return { success: false, message: "Email transporter configuration is invalid" };
   }
 
   try {
-    const result = await resend.emails.send({
+    const info = await transporter.sendMail({
       from: formatFromAddress(),
       to,
       subject,
       text,
       html,
       replyTo,
-      ...(attachments.length ? { attachments: normalizeAttachments(attachments) } : {}),
+      attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
     });
 
-    if (result.error) {
-      return { success: false, message: result.error.message || "Failed to send email" };
-    }
-
-    return { success: true, data: result.data };
+    return { success: true, data: info };
   } catch (error) {
     if (!isProduction) {
       console.warn("Email send failed in development:", error.message);
