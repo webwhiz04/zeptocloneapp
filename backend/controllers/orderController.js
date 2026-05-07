@@ -7,7 +7,7 @@ import {
   getOrderKey,
 } from "../utils/orderUtils.js";
 import { getUserByEmail, upsertShippingAddress } from "./userController.js";
-import { getSanitizedEmailUser, createTransporter, getMailConfigError } from "../utils/mailer.js";
+import { sendMail, getMailConfigError } from "../utils/mailer.js";
 import { getRazorpayCredentials, createRazorpayOrder } from "../utils/razorpayUtils.js";
 import { generateInvoicePdf } from "../utils/pdfGenerator.js";
 import crypto from "crypto";
@@ -25,14 +25,12 @@ const sendOrderConfirmationEmail = async ({ email, order, isCod = false }) => {
     return;
   }
 
-    try {
-      const transporter = createTransporter();
-      const messageText = getOrderConfirmationText({ email, order });
-      const frontendBase = process.env.FRONTEND_BASE_URL || "http://localhost:5173";
-      const pdfBuffer = await generateInvoicePdf(order, { baseUrl: frontendBase, userEmail: email });
+  try {
+    const messageText = getOrderConfirmationText({ email, order });
+    const frontendBase = process.env.FRONTEND_BASE_URL || "http://localhost:5173";
+    const pdfBuffer = await generateInvoicePdf(order, { baseUrl: frontendBase, userEmail: email });
 
-    await transporter.sendMail({
-      from: getSanitizedEmailUser(),
+    const result = await sendMail({
       to: email,
       subject: isCod
         ? "Order Placed (COD) - Thank you for your purchase"
@@ -42,9 +40,14 @@ const sendOrderConfirmationEmail = async ({ email, order, isCod = false }) => {
         {
           filename: `Invoice-${order.paymentDetails?.orderId || "Order"}.pdf`,
           content: pdfBuffer,
+          contentType: "application/pdf",
         },
       ],
     });
+
+    if (!result.success) {
+      console.warn(`Order confirmation mail failed for ${email}: ${result.message}`);
+    }
   } catch (error) {
     console.error("Error in sendOrderConfirmationEmail flow:", error);
   }
