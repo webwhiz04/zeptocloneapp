@@ -129,6 +129,7 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, price, categories, quantity, description } = req.body;
+    const normalizedQuantity = normalizeQuantity(quantity);
     const product = await Product.findById(id);
 
     if (!product) {

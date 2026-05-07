@@ -11,6 +11,12 @@ const API_URL = `${BASE_URL}/api/products`;
 
 const callApi = (path = "", options = {}) => fetch(`${API_URL}${path}`, options);
 
+const getNumericQuantity = (value) => {
+    const raw = String(value ?? "").trim();
+    const match = raw.match(/\d+(\.\d+)?/);
+    return match ? match[0] : "";
+};
+
 const options = [
     { value: 'cafe', label: 'Cafe' },
     { value: 'home', label: 'Home' },
@@ -48,7 +54,7 @@ function AddProduct({
         if (editMode && initialProduct?._id && initialProduct._id === editId) {
             setProductName(initialProduct.name || "");
             setPrice(initialProduct.price ?? "");
-            setQuantity(initialProduct.quantity ?? "");
+            setQuantity(getNumericQuantity(initialProduct.quantity));
             setDescription(initialProduct.description || "");
             setCurrentImage(initialProduct.image || "");
             setCategories(initialProduct.categories || []);
@@ -71,7 +77,7 @@ function AddProduct({
                 const product = data?.product;
                 setProductName(product.name || "");
                 setPrice(product.price ?? "");
-                setQuantity(product.quantity ?? "");
+                setQuantity(getNumericQuantity(product.quantity));
                 setDescription(product.description || "");
                 setCurrentImage(product.image || "");
                 setCategories(product.categories || []);

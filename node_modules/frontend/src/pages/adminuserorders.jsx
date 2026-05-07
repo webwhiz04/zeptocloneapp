@@ -105,7 +105,7 @@ function AdminUserOrders() {
         setErrorMessage("");
 
         try {
-            const response = await fetch("/api/userdata/admin/orders/status", {
+            const response = await fetch(`${API_URLS.USERDATA}/admin/orders/status`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
