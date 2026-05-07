@@ -50,21 +50,17 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Final most compatible configuration for Render:
-  // 1. Uses smtp.googlemail.com (Alternate route)
-  // 2. Uses Port 465 (SSL) for immediate secure connection
-  // 3. Disables strict SSL verification to prevent handshake timeouts
+  // Final definitive configuration for Brevo SMTP:
+  // 1. Host: smtp-relay.brevo.com
+  // 2. Port: 587 (Standard for Brevo)
+  // 3. Family: 4 (Forces IPv4 to bypass Render networking issues)
   const transporter = nodemailer.createTransport({
-    host: "smtp.googlemail.com",
-    port: 465,
-    secure: true,
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false, // TLS via STARTTLS
     auth: { user, pass },
-    tls: {
-      rejectUnauthorized: false,
-      servername: "smtp.gmail.com"
-    },
-    family: 4, // Force IPv4
-    connectionTimeout: 60000,
+    family: 4, 
+    connectionTimeout: 60000, 
     greetingTimeout: 60000,
     socketTimeout: 60000,
   });
@@ -76,14 +72,16 @@ const formatFromAddress = () => {
   const from = getSanitizedEmailFrom();
 
   if (!from) {
-    return "Zepto <no-reply@yourdomain.com>";
+    return "Zepto Admin <zeptoecommerce@gmail.com>";
   }
 
+  // If the user provided the full format like "Company <email@company.com>", use it as is.
   if (from.includes("<") && from.includes(">")) {
     return from;
   }
 
-  return `Zepto <${from}>`;
+  // If they only provided an email, we wrap it with the company name "Zepto Admin".
+  return `Zepto Admin <${from}>`;
 };
 
 const normalizeAttachments = (attachments = []) =>
