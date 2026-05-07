@@ -1,5 +1,11 @@
 import nodemailer from "nodemailer";
+import dns from "dns";
 import config from "../config/config.js";
+
+// Custom DNS lookup to strictly force IPv4
+const lookupIPv4 = (hostname, options, callback) => {
+  return dns.lookup(hostname, { family: 4 }, callback);
+};
 
 const isProduction = config.NODE_ENV === "production";
 
@@ -44,17 +50,20 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Force IPv4 (family: 4) to prevent "ENETUNREACH" errors on Render.
-  // This happens when the server tries to connect via IPv6 but the network route is missing.
+  // Final robust configuration for Render:
+  // 1. Uses Port 587 (Standard for cloud platforms)
+  // 2. Uses a custom DNS lookup to EXCLUSIVELY use IPv4 addresses
+  // 3. Disables IPv6 at the socket level
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // TLS via STARTTLS
     auth: { user, pass },
-    family: 4, // Force IPv4
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000,
+    lookup: lookupIPv4, // Force DNS to only return IPv4
+    family: 4,          // Force socket to use IPv4
+    connectionTimeout: 40000,
+    greetingTimeout: 40000,
+    socketTimeout: 40000,
   });
 
   return transporter;
