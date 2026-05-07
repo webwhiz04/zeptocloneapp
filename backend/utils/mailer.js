@@ -50,27 +50,19 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Final robust configuration for Render:
-  // 1. Uses Port 587 (Standard for cloud platforms)
-  // 2. Uses a custom DNS lookup to EXCLUSIVELY use IPv4 addresses
-  // 3. Disables IPv6 at the socket level
-  // 4. Added 'authMethod' to ensure standard login flow
+  // Final definitive configuration for Render + Gmail:
+  // 1. Reverts to Port 465 (SSL) which is often more reliable on Render for Gmail
+  // 2. Keeps strictly forced IPv4 to avoid network routing issues
+  // 3. Maximizes timeouts to 1 minute to handle slow handshakes
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // TLS via STARTTLS
-    auth: { 
-      user, 
-      pass 
-    },
-    lookup: lookupIPv4, // Force DNS to only return IPv4
-    family: 4,          // Force socket to use IPv4
-    connectionTimeout: 60000, // Increased to 60s for slow cloud cold-starts
+    port: 465,
+    secure: true, 
+    auth: { user, pass },
+    family: 4, 
+    connectionTimeout: 60000, 
     greetingTimeout: 60000,
     socketTimeout: 60000,
-    dnsTimeout: 10000,
-    debug: !isProduction, // Enable debug logs in development
-    logger: !isProduction, // Enable logger in development
   });
 
   return transporter;
