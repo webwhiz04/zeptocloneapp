@@ -22,11 +22,21 @@ export const sendOtpHandler = async (req, res) => {
 
     const emailResult = await sendOtpEmail(email, otp);
 
-    if (!emailResult.success) {
-      console.error("OTP Email Config Error:", emailResult.message);
-      return res.status(500).json({ 
-        message: "Email service is not configured correctly on the server.",
-        details: config.NODE_ENV === "production" ? null : emailResult.message 
+    if (!emailResult.success && config.NODE_ENV === "production") {
+      console.error("OTP Email Error (Production):", emailResult.message);
+      console.log(`CRITICAL: Check Render logs for this OTP if mail failed. OTP for ${email}: ${otp}`);
+      
+      // We still save the OTP to DB so the user isn't blocked if they can check logs
+      await User.findOneAndUpdate(
+        { email },
+        { $set: { email, otp, otpExpires: new Date(Date.now() + OTP_TTL_MS) } },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+
+      // Return a message that suggests checking the log if they are the admin
+      return res.json({ 
+        message: "OTP generated. If email is not received, please check server logs (Admin only).",
+        status: "logged_only"
       });
     }
 

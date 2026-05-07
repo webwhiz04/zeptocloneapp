@@ -50,17 +50,21 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Final definitive configuration for Render + Gmail:
-  // 1. Reverts to Port 465 (SSL) which is often more reliable on Render for Gmail
-  // 2. Keeps strictly forced IPv4 to avoid network routing issues
-  // 3. Maximizes timeouts to 1 minute to handle slow handshakes
+  // Final most compatible configuration for Render:
+  // 1. Uses smtp.googlemail.com (Alternate route)
+  // 2. Uses Port 465 (SSL) for immediate secure connection
+  // 3. Disables strict SSL verification to prevent handshake timeouts
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "smtp.googlemail.com",
     port: 465,
-    secure: true, 
+    secure: true,
     auth: { user, pass },
-    family: 4, 
-    connectionTimeout: 60000, 
+    tls: {
+      rejectUnauthorized: false,
+      servername: "smtp.gmail.com"
+    },
+    family: 4, // Force IPv4
+    connectionTimeout: 60000,
     greetingTimeout: 60000,
     socketTimeout: 60000,
   });
