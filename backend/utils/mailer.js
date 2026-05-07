@@ -54,16 +54,23 @@ const createTransporter = () => {
   // 1. Uses Port 587 (Standard for cloud platforms)
   // 2. Uses a custom DNS lookup to EXCLUSIVELY use IPv4 addresses
   // 3. Disables IPv6 at the socket level
+  // 4. Added 'authMethod' to ensure standard login flow
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false, // TLS via STARTTLS
-    auth: { user, pass },
+    auth: { 
+      user, 
+      pass 
+    },
     lookup: lookupIPv4, // Force DNS to only return IPv4
     family: 4,          // Force socket to use IPv4
-    connectionTimeout: 40000,
-    greetingTimeout: 40000,
-    socketTimeout: 40000,
+    connectionTimeout: 60000, // Increased to 60s for slow cloud cold-starts
+    greetingTimeout: 60000,
+    socketTimeout: 60000,
+    dnsTimeout: 10000,
+    debug: !isProduction, // Enable debug logs in development
+    logger: !isProduction, // Enable logger in development
   });
 
   return transporter;

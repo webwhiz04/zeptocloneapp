@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import { sendOtpEmail } from "../utils/mailer.js";
+import config from "../config/config.js";
 
 const OTP_TTL_MS = 5 * 60 * 1000;
 
@@ -25,7 +26,7 @@ export const sendOtpHandler = async (req, res) => {
       console.error("OTP Email Config Error:", emailResult.message);
       return res.status(500).json({ 
         message: "Email service is not configured correctly on the server.",
-        details: process.env.NODE_ENV === "production" ? null : emailResult.message 
+        details: config.NODE_ENV === "production" ? null : emailResult.message 
       });
     }
 
@@ -56,7 +57,7 @@ export const sendOtpHandler = async (req, res) => {
   } catch (error) {
     console.error("Send OTP Error:", error);
 
-    if (process.env.NODE_ENV !== "production" && email && otp) {
+    if (config.NODE_ENV !== "production" && email && otp) {
       console.warn("Falling back to dev OTP response due to send OTP error.");
       console.log(`DEV OTP for ${email}: ${otp}`);
 
