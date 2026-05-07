@@ -44,14 +44,17 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Use Nodemailer's built-in "gmail" service setting.
-  // This is the most stable configuration for Gmail in cloud environments.
+  // Force IPv4 (family: 4) to prevent "ENETUNREACH" errors on Render.
+  // This happens when the server tries to connect via IPv6 but the network route is missing.
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: { user, pass },
-    connectionTimeout: 30000, // 30 seconds
-    greetingTimeout: 30000,   // 30 seconds
-    socketTimeout: 30000,     // 30 seconds
+    family: 4, // Force IPv4
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
   });
 
   return transporter;
