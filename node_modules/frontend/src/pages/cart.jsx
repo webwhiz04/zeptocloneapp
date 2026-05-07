@@ -9,7 +9,7 @@ import {
     getSavedShippingAddress,
 } from "../utils/cartStorage.js";
 import { getLoggedInEmail, isUserLoggedIn } from "../utils/authStorage.js";
-import getImageUrl from "../utils/imageUrl.js";
+import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
 
 const HANDLING_FEE = 30;
 const DELIVERY_FEE = 10;
@@ -171,10 +171,10 @@ function CartPage() {
                                     className="cartimage"
                                     src={getImageUrl(item.image)}
                                     alt={item.name}
-                                    onError={(event) => {
-                                        event.currentTarget.src = "https://via.placeholder.com/80x80?text=No+Image";
-                                    }}
-                                />
+                                        onError={(event) => {
+                                            event.currentTarget.src = getPlaceholderUrl(80, 80);
+                                        }}
+                                    />
                                 <div className="cartcontent">
                                     <p className="cartname">{item.name}</p>
                                     <p className="cartprice">₹{Number(item.price || 0).toFixed(2)}</p>

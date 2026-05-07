@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./orderpage.css";
 import { getLoggedInEmail, isUserLoggedIn } from "../utils/authStorage.js";
 import { getCartItems, getShippingAddresses, placeOrder, saveShippingAddress } from "../utils/cartStorage.js";
-import getImageUrl from "../utils/imageUrl.js";
+import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
 
 const HANDLING_FEE = 30;
 const DELIVERY_FEE = 10;
@@ -347,10 +347,10 @@ function OrderPage() {
                                                 className="itemimage"
                                                 src={getImageUrl(item.image)}
                                                 alt={item.name}
-                                                onError={(event) => {
-                                                    event.currentTarget.src = "https://via.placeholder.com/64x64?text=No+Image";
-                                                }}
-                                            />
+                                            onError={(event) => {
+                                                event.currentTarget.src = getPlaceholderUrl(64, 64);
+                                            }}
+                                        />
                                             <div className="itemdetails">
                                                 <span className="itemname">{item.name}</span>
                                                 <span className="itemmeta">

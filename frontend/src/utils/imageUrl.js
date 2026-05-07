@@ -18,4 +18,8 @@ const getImageUrl = (imagePath) => {
     return `${API_BASE_URL}/uploads/${cleanPath}`;
 };
 
+export const getPlaceholderUrl = (width = 300, height = 220, text = "No Image") => {
+    return `https://placehold.co/${width}x${height}?text=${encodeURIComponent(text)}`;
+};
+
 export default getImageUrl;

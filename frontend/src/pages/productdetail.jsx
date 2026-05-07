@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useCart from "../hooks/useCart.js";
 import "./productdetail.css";
-import getImageUrl from "../utils/imageUrl.js";
+import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
 
 import API_BASE_URL from "../services/api";
 
@@ -79,13 +79,13 @@ function ProductDetailPage() {
         const uniqueImages = [...new Set(images)];
 
         if (uniqueImages.length === 0) {
-            uniqueImages.push("https://via.placeholder.com/550x550?text=No+Image");
+            uniqueImages.push(getPlaceholderUrl(550, 550));
         }
 
         return uniqueImages;
     }, [product]);
 
-    const activeImage = selectedImage || imageList[0] || "https://via.placeholder.com/550x550?text=No+Image";
+    const activeImage = selectedImage || imageList[0] || getPlaceholderUrl(550, 550);
     const numericPrice = Number(product?.price || 0);
     const discountPercent = getDiscountPercent(product?.price);
     const originalPrice = numericPrice > 0 ? numericPrice + Math.round((numericPrice * discountPercent) / 100) : 0;
@@ -120,7 +120,7 @@ function ProductDetailPage() {
                         src={activeImage}
                         alt={product.name || "product"}
                         onError={(event) => {
-                            event.currentTarget.src = "https://via.placeholder.com/550x550?text=No+Image";
+                            event.currentTarget.src = getPlaceholderUrl(550, 550);
                         }}
                     />
 

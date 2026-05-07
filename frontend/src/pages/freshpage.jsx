@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/categoryproducts.css";
 import useCart from "../hooks/useCart.js";
-import getImageUrl from "../utils/imageUrl.js";
+import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
 
 import API_BASE_URL from "../services/api";
 
@@ -73,7 +73,7 @@ function FreshPage() {
                                 src={getImageUrl(product.image)}
                                 alt={product.name}
                                 onError={(event) => {
-                                    event.currentTarget.src = "https://via.placeholder.com/300x220?text=No+Image";
+                                    event.currentTarget.src = getPlaceholderUrl(300, 220);
                                 }}
                             />
                             <button

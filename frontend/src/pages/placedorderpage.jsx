@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getLoggedInEmail, isUserLoggedIn } from "../utils/authStorage.js";
 import { getOrders } from "../utils/cartStorage.js";
-import getImageUrl from "../utils/imageUrl.js";
+import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
 import "./placedorderpage.css";
 
 const PLACED_ORDER_SESSION_KEY = "recent-placed-order";
@@ -339,10 +339,10 @@ function PlacedOrderPage() {
                                             <img
                                                 src={getImageUrl(item.image)}
                                                 alt={item.name}
-                                                onError={(event) => {
-                                                    event.currentTarget.src = "https://via.placeholder.com/80x80?text=No+Image";
-                                                }}
-                                            />
+                                                    onError={(event) => {
+                                                        event.currentTarget.src = getPlaceholderUrl(80, 80);
+                                                    }}
+                                                />
 
                                             <div className="placedorderitemdetails">
                                                 <div>
