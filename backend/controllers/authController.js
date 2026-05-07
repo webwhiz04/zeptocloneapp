@@ -22,7 +22,11 @@ export const sendOtpHandler = async (req, res) => {
     const emailResult = await sendOtpEmail(email, otp);
 
     if (!emailResult.success) {
-      return res.status(500).json({ message: emailResult.message });
+      console.error("OTP Email Config Error:", emailResult.message);
+      return res.status(500).json({ 
+        message: "Email service is not configured correctly on the server.",
+        details: process.env.NODE_ENV === "production" ? null : emailResult.message 
+      });
     }
 
     await User.findOneAndUpdate(

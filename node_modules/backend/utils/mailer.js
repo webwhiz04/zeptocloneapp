@@ -6,15 +6,11 @@ const isProduction = config.NODE_ENV === "production";
 export const getSanitizedEmailFrom = () => config.EMAIL_FROM?.trim() || config.EMAIL_USER?.trim();
 
 export const getMailConfigError = () => {
-  const from = getSanitizedEmailFrom();
   const user = config.EMAIL_USER?.trim();
   const pass = config.EMAIL_PASS?.trim();
 
-  // `from` may be omitted because `getSanitizedEmailFrom` already falls
-  // back to `EMAIL_USER` when `EMAIL_FROM` is not provided. Only require
-  // SMTP credentials (user + pass) for transporter creation.
   if (!user || !pass) {
-    return "EMAIL_USER and EMAIL_PASS must be set in backend/.env";
+    return "EMAIL_USER and EMAIL_PASS environment variables are missing";
   }
 
   return null;
