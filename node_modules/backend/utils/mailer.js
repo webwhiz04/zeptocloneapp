@@ -44,18 +44,17 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  const isGmail = user.endsWith("@gmail.com");
-
-  const transporter = nodemailer.createTransport(
-    isGmail
-      ? { service: "gmail", auth: { user, pass } }
-      : {
-          host: process.env.SMTP_HOST || "smtp.gmail.com",
-          port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
-          secure: process.env.SMTP_SECURE === "true",
-          auth: { user, pass },
-        }
-  );
+  // Use explicit configuration for Gmail on Port 465 (SSL)
+  // This is more stable in cloud environments like Render than Port 587.
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: { user, pass },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,   // 10 seconds
+    socketTimeout: 10000,     // 10 seconds
+  });
 
   return transporter;
 };

@@ -38,6 +38,9 @@ if (!fs.existsSync(uploadsDir)) {
 const app = express();
 const PORT = config.PORT || 5000;
 
+// Trust the proxy (Render uses a reverse proxy)
+app.set("trust proxy", 1);
+
 app.use(
   helmet({
     contentSecurityPolicy: false,
