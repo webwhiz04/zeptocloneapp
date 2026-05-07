@@ -127,10 +127,11 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
       subject,
       text,
       html,
-      replyTo,
+      replyTo: replyTo || getSanitizedEmailFrom(),
       attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
     });
 
+    console.log(`Email accepted by Brevo. MessageId: ${info.messageId}`);
     return { success: true, data: info };
   } catch (error) {
     // Log full error details to server logs for debugging.
