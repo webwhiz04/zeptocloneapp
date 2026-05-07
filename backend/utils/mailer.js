@@ -52,15 +52,17 @@ const createTransporter = () => {
 
   // Final definitive configuration for Brevo SMTP:
   // 1. Host: smtp-relay.brevo.com
-  // 2. Port: 465 (Alternative for Port 587 which is often blocked or slow on Vercel)
+  // 2. Port: 587 (Standard for Brevo)
+  // 3. Family: 4 (CRITICAL for Render to bypass IPv6 timeout issues)
   const transporter = nodemailer.createTransport({
     host: "smtp-relay.brevo.com",
-    port: 465,
-    secure: true, // Use SSL for Port 465
+    port: 587,
+    secure: false, // TLS via STARTTLS
     auth: { user, pass },
-    connectionTimeout: 20000, 
-    greetingTimeout: 20000,
-    socketTimeout: 20000,
+    family: 4, 
+    connectionTimeout: 30000, 
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
   });
 
   return transporter;
