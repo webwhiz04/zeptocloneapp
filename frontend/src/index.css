@@ -9,10 +9,18 @@ body {
     padding-top: 130px; /* Offset for the fixed nav-container */
 }
 
+body.admin-mode {
+    padding-top: 0;
+}
+
 @media (max-width: 768px) {
     body {
         padding-top: 200px;
     }
+
+	body.admin-mode {
+		padding-top: 0;
+	}
 }
 
 .cart-toast {

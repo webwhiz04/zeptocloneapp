@@ -98,7 +98,7 @@
 }
 
 .placeholder-chart {
-    height: 250px;
+    min-height: 250px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,34 +107,134 @@
     border: 1px dashed #ddd;
 }
 
-.bar-chart-mock {
+.line-chart-wrap {
+    width: 100%;
+    display: grid;
+    gap: 8px;
+}
+
+.chart-y-label,
+.chart-x-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+}
+
+.chart-y-label {
+    padding-left: 6px;
+}
+
+.chart-x-label {
+    text-align: center;
+}
+
+.line-chart-svg {
+    width: 100%;
+    height: 260px;
+}
+
+.chart-axis {
+    stroke: #b7c0cb;
+    stroke-width: 1.6;
+}
+
+.chart-grid {
+    stroke: #e7ebf0;
+    stroke-width: 1;
+}
+
+.chart-line {
+    fill: none;
+    stroke: #3e0075;
+    stroke-width: 3;
+}
+
+.chart-dot {
+    fill: #ff3366;
+    stroke: #ffffff;
+    stroke-width: 1.5;
+}
+
+.chart-tick-label {
+    fill: #667085;
+    font-size: 11px;
+}
+
+.status-pie-wrap {
     display: flex;
-    align-items: flex-end;
-    gap: 15px;
-    height: 150px;
-    width: 80%;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 16px;
 }
 
-.bar {
-    flex: 1;
-    background-color: #3e0075;
-    border-radius: 4px 4px 0 0;
-    transition: height 0.3s ease;
-}
-
-.pie-chart-mock {
-    width: 150px;
-    height: 150px;
+.pie-chart-live {
+    width: 170px;
+    height: 170px;
     border-radius: 50%;
-    background: conic-gradient(
-        #3e0075 0% 40%,
-        #ff3366 40% 70%,
-        #e3f2fd 70% 100%
-    );
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pie-chart-live::after {
+    content: "";
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+}
+
+.pie-total {
+    position: relative;
+    z-index: 1;
+    font-size: 18px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.pie-legend {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+}
+
+.legend-row {
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-label {
+    color: #475467;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.legend-value {
+    color: #667085;
+    font-size: 12px;
 }
 
 @media (max-width: 1100px) {
     .admin-charts-section {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .status-pie-wrap {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

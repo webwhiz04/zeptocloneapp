@@ -1,9 +1,9 @@
 .product-detail-page-wrapper {
     --header-offset: 92px;
     --section-gap-from-header: 20px;
-    margin-top: 92px;
+    margin-top: 5px;
     padding: 24px 36px;
-    min-height: calc(100vh - 92px);
+    min-height: calc(10vh - 9px);
     background: #ffffff;
 }
 

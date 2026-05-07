@@ -1,8 +1,18 @@
 .categorypage {
-    padding: 24px 5%;
-    max-width: 1440px;
-    margin: 0 auto;
+    
+    padding: calc(5px + 16px) 16px 24px 16px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     background: #ffffff;
+}
+
+.all-page {
+    padding-top: 5px;
+}
+
+.all-page .section-header {
+    margin: 0 0 14px;
 }
 
 .section-header {
@@ -129,8 +139,16 @@
 
 @media (max-width: 768px) {
     .categorypage {
-        margin-top: 100px;
-        padding: 18px 14px;
+        /* ensure offset on small screens but avoid large gaps */
+        padding: calc(72px + 12px) 14px 18px 14px;
+    }
+
+    .all-page {
+        padding-top: 72px;
+    }
+
+    .all-page .section-header {
+        margin: 0 0 12px;
     }
 
     .product {

@@ -1,10 +1,18 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaPlus, FaBox, FaClipboardList, FaUsers, FaEnvelope } from "react-icons/fa";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FaPlus, FaBox, FaClipboardList } from "react-icons/fa";
 import "./AdminLayout.css";
 
 const AdminLayout = ({ children }) => {
-    const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        document.body.classList.add("admin-mode");
+
+        return () => {
+            document.body.classList.remove("admin-mode");
+        };
+    }, []);
 
     const menuItems = [
         { path: "/admindashboard/addproduct", label: "Add Product", icon: <FaPlus /> },

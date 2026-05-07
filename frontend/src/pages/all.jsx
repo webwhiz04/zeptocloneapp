@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "../styles/categoryproducts.css";
 import useCart from "../hooks/useCart.js";
 import getImageUrl from "../utils/imageUrl.js";
-import Banners from "../components/Banners.jsx";
 
 import API_BASE_URL from "../services/api";
 
@@ -50,8 +49,7 @@ function AllPage() {
     }, []);
 
     return (
-        <div className="categorypage">
-            <Banners />
+        <div className="categorypage all-page">
             <div className="section-header">
                 <h2 className="section-title">All Products</h2>
             </div>

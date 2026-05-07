@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 
@@ -8,6 +8,14 @@ function Admin() {
     const [password, setPassword ]= useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.body.classList.add("admin-mode");
+
+        return () => {
+            document.body.classList.remove("admin-mode");
+        };
+    }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();

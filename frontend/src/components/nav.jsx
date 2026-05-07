@@ -20,7 +20,6 @@ import {
     getLoggedInUserDetails,
     isUserLoggedIn,
 } from "../utils/authStorage.js";
-
 function Nav() {
     const navigate = useNavigate();
     const loggedIn = isUserLoggedIn();
@@ -84,18 +83,18 @@ function Nav() {
                                     <span>Profile</span>
                                 </div>
                             </button>
-                            {showUserPopup ? (
+                            {showUserPopup && (
                                 <div className="user-popup" role="menu" aria-label="User menu">
                                     <div className="popup-user-name"><FaUserCircle /> {userName}</div>
                                     <div className="popup-orders" role="menuitem" onClick={() => { navigate("/my-orders"); setShowUserPopup(false); }}>
-                                        My Orders  
+                                        My Orders
                                     </div>
-                                    <div ClassName="popup-info" role="menuitem" onClick={() => { navigate("/profile"); setShowUserPopup(false); }}>
+                                    <div className="popup-info" role="menuitem" onClick={() => { navigate("/profile"); setShowUserPopup(false); }}>
                                         My Profile
-                                    </div>  
+                                    </div>
                                     <button type="button" className="logout-btn" onClick={handleLogout}>Logout</button>
                                 </div>
-                            ) : null}
+                            )}
                         </div>
                     ) : (
                         <Link to="/login" className="login-link">
@@ -105,47 +104,35 @@ function Nav() {
                             </div>
                         </Link>
                     )}
+
                     <Link to="/cart" className="cart-link">
                         <div className="nav-icon-wrap">
                             <FaShoppingCart />
                             <span>Cart</span>
                         </div>
                     </Link>
+
+                    <Link to="/admin" className="admin-link">
+                        <div className="nav-icon-wrap">
+                            <RiAdminFill />
+                            <span>Admin</span>
+                        </div>
+                    </Link>
                 </div>
             </header>
 
             <nav className="category-bar">
-                <Link to="/all" className="cat-item active"><span className="cat-icon">🛍️</span> All</Link>
-                <Link to="/cafe" className="cat-item"><span className="cat-icon">☕</span> Cafe</Link>
-                <Link to="/home" className="cat-item"><span className="cat-icon">🏠</span> Home</Link>
-                <Link to="/toys" className="cat-item"><span className="cat-icon">🧸</span> Toys</Link>
-                <Link to="/fresh" className="cat-item"><span className="cat-icon">🥦</span> Fresh</Link>
-                <Link to="/electronics" className="cat-item"><span className="cat-icon">🎧</span> Electronics</Link>
-                <Link to="/mobile" className="cat-item"><span className="cat-icon">📱</span> Mobiles</Link>
-                <Link to="/beauty" className="cat-item"><span className="cat-icon">💄</span> Beauty</Link>
-                <Link to="/fashion" className="cat-item"><span className="cat-icon">👗</span> Fashion</Link>
+                <Link to="/all" className="cat-item active"><BsBagHeart className="cat-icon" /> All</Link>
+                <Link to="/cafe" className="cat-item"><SiBuymeacoffee className="cat-icon" /> Cafe</Link>
+                <Link to="/home" className="cat-item"><FaHome className="cat-icon" /> Home</Link>
+                <Link to="/toys" className="cat-item"><TbHorseToy className="cat-icon" /> Toys</Link>
+                <Link to="/fresh" className="cat-item"><SiCodefresh className="cat-icon" /> Fresh</Link>
+                <Link to="/electronics" className="cat-item"><FaHeadphonesAlt className="cat-icon" /> Electronics</Link>
+                <Link to="/mobile" className="cat-item"><CiMobile3 className="cat-icon" /> Mobiles</Link>
+                <Link to="/beauty" className="cat-item"><FaWandMagicSparkles className="cat-icon" /> Beauty</Link>
+                <Link to="/fashion" className="cat-item"><GiLargeDress className="cat-icon" /> Fashion</Link>
             </nav>
         </div>
-    );
-                    <Link to="/cart"><FaShoppingCart />Cart</Link>
-                ) : (
-                    <Link to="/login" state={{ from: { pathname: "/cart" } }}><FaShoppingCart />Cart</Link>
-                )}
-                <Link to="/admin"><RiAdminFill />Admin</Link>
-            </div>
-            <div className="categories">
-                <Link to="/all"><BsBagHeart />All</Link>
-                <Link to="/cafe"><SiBuymeacoffee />Cafe</Link>
-                <Link to="/home"><FaHome />Home</Link>
-                <Link to="/toys"><TbHorseToy />Toys</Link>
-                <Link to="/fresh"><SiCodefresh />Fresh</Link>
-                <Link to="/electronics"><FaHeadphonesAlt />Electronics</Link>
-                <Link to="/mobile"> <CiMobile3 />Mobile</Link>
-                <Link to="/beauty"><FaWandMagicSparkles />Beauty</Link>
-                <Link to="/fashion"><GiLargeDress />Fashion</Link>
- 
-            </div>
-        </header>
     );
 }
 

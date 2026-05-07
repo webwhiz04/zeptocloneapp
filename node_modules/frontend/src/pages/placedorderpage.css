@@ -1,6 +1,6 @@
 .placedorderpage {
-    margin-top: 92px;
-    min-height: calc(100vh - 92px);
+    margin-top: 5px;
+    min-height: calc(10vh - 9px);
     padding: 24px 16px 40px;
     background:
         radial-gradient(circle at top left, rgba(255, 192, 122, 0.18), transparent 32%),

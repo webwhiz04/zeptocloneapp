@@ -1,6 +1,6 @@
 .paymentpage {
-    margin-top: 92px;
-    min-height: calc(100vh - 92px);
+    margin-top: 5px;
+    min-height: calc(10vh - 9px);
     padding: 24px 16px 40px;
     background: linear-gradient(150deg, #f7fbff 0%, #fff8ef 48%, #f5f7ff 100%);
 }
