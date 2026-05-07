@@ -44,16 +44,14 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Use explicit configuration for Gmail on Port 465 (SSL)
-  // This is more stable in cloud environments like Render than Port 587.
+  // Use Nodemailer's built-in "gmail" service setting.
+  // This is the most stable configuration for Gmail in cloud environments.
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    service: "gmail",
     auth: { user, pass },
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,   // 10 seconds
-    socketTimeout: 10000,     // 10 seconds
+    connectionTimeout: 30000, // 30 seconds
+    greetingTimeout: 30000,   // 30 seconds
+    socketTimeout: 30000,     // 30 seconds
   });
 
   return transporter;
@@ -107,27 +105,6 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
 
   if (!transporter) {
     return { success: false, message: "Email transporter configuration is invalid" };
-  }
-
-  // Verify transporter early so auth/connection errors appear in logs.
-  try {
-    if (typeof transporter.verify === "function") {
-      await transporter.verify();
-    }
-  } catch (verifyErr) {
-    console.error("SMTP verify failed:", {
-      message: verifyErr?.message,
-      code: verifyErr?.code,
-      response: verifyErr?.response,
-      stack: verifyErr?.stack,
-    });
-
-    if (!isProduction) {
-      console.warn("Email transporter verify failed in development:", verifyErr.message);
-      return { success: true, devMode: true };
-    }
-
-    return { success: false, message: getMailSendErrorMessage(verifyErr) };
   }
 
   try {
