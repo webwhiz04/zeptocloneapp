@@ -120,9 +120,11 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     return { success: false, message: "Email transporter configuration is invalid" };
   }
 
+  const fromAddress = formatFromAddress();
+
   try {
     const info = await transporter.sendMail({
-      from: formatFromAddress(),
+      from: fromAddress,
       to,
       subject,
       text,
@@ -131,7 +133,7 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
       attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
     });
 
-    console.log(`Email accepted by Brevo. MessageId: ${info.messageId}`);
+    console.log(`Email sent from [${fromAddress}] to [${to}]. Accepted by Brevo. MessageId: ${info.messageId}`);
     return { success: true, data: info };
   } catch (error) {
     // Log full error details to server logs for debugging.
@@ -143,8 +145,8 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     });
 
     if (!isProduction) {
-      console.warn("Email send failed in development:", error.message);
-      return { success: true, devMode: true };
+      console.warn("Email send failed in development (auth error or network issue):", error.message);
+      return { success: true, devMode: true, message: error.message };
     }
 
     return { success: false, message: getMailSendErrorMessage(error) };
@@ -154,19 +156,27 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
 export const sendOtpEmail = async (email, otp) => {
   const result = await sendMail({
     to: email,
-    subject: "Your OTP Code - Login Verification",
+    subject: `${otp} is your Zepto verification code`,
     text: `Your OTP is ${otp}. It expires in 5 minutes.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #3e0075; text-align: center;">Zepto Verification</h2>
+        <p>Hello,</p>
+        <p>Your One-Time Password (OTP) for logging into your Zepto account is:</p>
+        <div style="background-color: #f3f3f3; padding: 15px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #ff3366; border-radius: 5px; margin: 20px 0;">
+          ${otp}
+        </div>
+        <p>This code will expire in <strong>5 minutes</strong>.</p>
+        <p style="color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">
+          If you did not request this code, please ignore this email.
+        </p>
+      </div>
+    `,
     replyTo: getSanitizedEmailFrom(),
   });
 
   if (result.success) {
     return result;
-  }
-
-  if (!isProduction) {
-    console.warn("OTP mail failed in development:", result.message);
-    console.log(`DEV OTP for ${email}: ${otp}`);
-    return { success: true, devMode: true };
   }
 
   return result;

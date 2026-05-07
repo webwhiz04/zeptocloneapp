@@ -22,21 +22,26 @@ export const sendOtpHandler = async (req, res) => {
 
     const emailResult = await sendOtpEmail(email, otp);
 
-    if (!emailResult.success && config.NODE_ENV === "production") {
-      console.error("OTP Email Error (Production):", emailResult.message);
-      console.log(`CRITICAL: Check Render logs for this OTP if mail failed. OTP for ${email}: ${otp}`);
+    // If it's a devMode success (meaning mail failed but we allow it in dev)
+    if (emailResult.devMode) {
+      console.log(`DEV OTP for ${email}: ${otp}`);
       
-      // We still save the OTP to DB so the user isn't blocked if they can check logs
       await User.findOneAndUpdate(
         { email },
         { $set: { email, otp, otpExpires: new Date(Date.now() + OTP_TTL_MS) } },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
 
-      // Return a message that suggests checking the log if they are the admin
-      return res.json({ 
-        message: "OTP generated. If email is not received, please check server logs (Admin only).",
-        status: "logged_only"
+      return res.json({
+        message: `OTP generated (Email failed: ${emailResult.message || "Dev Mode"}). Check console for OTP.`,
+        devOtp: otp,
+      });
+    }
+
+    if (emailResult.success === false) {
+      console.error("OTP Email Error:", emailResult.message);
+      return res.status(500).json({ 
+        message: `Failed to send email: ${emailResult.message}. Please check your email configuration.` 
       });
     }
 
@@ -56,43 +61,9 @@ export const sendOtpHandler = async (req, res) => {
       }
     );
 
-    if (emailResult.devMode) {
-      return res.json({
-        message: "OTP generated for development mode (email not sent)",
-        devOtp: otp,
-      });
-    }
-
     return res.json({ message: "OTP sent successfully" });
   } catch (error) {
     console.error("Send OTP Error:", error);
-
-    if (config.NODE_ENV !== "production" && email && otp) {
-      console.warn("Falling back to dev OTP response due to send OTP error.");
-      console.log(`DEV OTP for ${email}: ${otp}`);
-
-      await User.findOneAndUpdate(
-        { email },
-        {
-          $set: {
-            email,
-            otp,
-            otpExpires: new Date(Date.now() + OTP_TTL_MS),
-          },
-        },
-        {
-          upsert: true,
-          new: true,
-          setDefaultsOnInsert: true,
-        }
-      );
-
-      return res.json({
-        message: "OTP generated for development mode (email not sent)",
-        devOtp: otp,
-      });
-    }
-
     res.status(500).json({ message: "Server error while sending OTP" });
   }
 };
