@@ -114,6 +114,27 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     return { success: false, message: "Email transporter configuration is invalid" };
   }
 
+  // Verify transporter early so auth/connection errors appear in logs.
+  try {
+    if (typeof transporter.verify === "function") {
+      await transporter.verify();
+    }
+  } catch (verifyErr) {
+    console.error("SMTP verify failed:", {
+      message: verifyErr?.message,
+      code: verifyErr?.code,
+      response: verifyErr?.response,
+      stack: verifyErr?.stack,
+    });
+
+    if (!isProduction) {
+      console.warn("Email transporter verify failed in development:", verifyErr.message);
+      return { success: true, devMode: true };
+    }
+
+    return { success: false, message: getMailSendErrorMessage(verifyErr) };
+  }
+
   try {
     const info = await transporter.sendMail({
       from: formatFromAddress(),
@@ -127,6 +148,14 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
 
     return { success: true, data: info };
   } catch (error) {
+    // Log full error details to server logs for debugging.
+    console.error("Email send error:", {
+      message: error?.message,
+      code: error?.code,
+      response: error?.response,
+      stack: error?.stack,
+    });
+
     if (!isProduction) {
       console.warn("Email send failed in development:", error.message);
       return { success: true, devMode: true };
