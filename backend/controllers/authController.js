@@ -9,7 +9,6 @@ const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 export const sendOtpHandler = async (req, res) => {
   let email = "";
   let otp = "";
-  let otpSaved = false;
 
   try {
     email = req.body.email?.trim().toLowerCase() || "";
@@ -19,6 +18,12 @@ export const sendOtpHandler = async (req, res) => {
     }
 
     otp = generateOtp();
+
+    const emailResult = await sendOtpEmail(email, otp);
+
+    if (!emailResult.success) {
+      return res.status(500).json({ message: emailResult.message });
+    }
 
     await User.findOneAndUpdate(
       { email },
@@ -35,27 +40,38 @@ export const sendOtpHandler = async (req, res) => {
         setDefaultsOnInsert: true,
       }
     );
-    otpSaved = true;
 
-    const emailResult = await sendOtpEmail(email, otp);
-
-    if (emailResult.success) {
-      if (emailResult.devMode) {
-        return res.json({
-          message: "OTP generated for development mode (email not sent)",
-          devOtp: otp,
-        });
-      }
-      return res.json({ message: "OTP sent successfully" });
+    if (emailResult.devMode) {
+      return res.json({
+        message: "OTP generated for development mode (email not sent)",
+        devOtp: otp,
+      });
     }
 
-    return res.status(500).json({ message: emailResult.message });
+    return res.json({ message: "OTP sent successfully" });
   } catch (error) {
     console.error("Send OTP Error:", error);
 
-    if (process.env.NODE_ENV !== "production" && otpSaved && email && otp) {
+    if (process.env.NODE_ENV !== "production" && email && otp) {
       console.warn("Falling back to dev OTP response due to send OTP error.");
       console.log(`DEV OTP for ${email}: ${otp}`);
+
+      await User.findOneAndUpdate(
+        { email },
+        {
+          $set: {
+            email,
+            otp,
+            otpExpires: new Date(Date.now() + OTP_TTL_MS),
+          },
+        },
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+
       return res.json({
         message: "OTP generated for development mode (email not sent)",
         devOtp: otp,

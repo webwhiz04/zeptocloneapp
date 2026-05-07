@@ -61,7 +61,10 @@ export const getMailSendErrorMessage = (error) => {
 
 export const createTransporter = () =>
   nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    requireTLS: true,
     auth: {
       user: getSanitizedEmailUser(),
       pass: getSanitizedEmailPass(),
@@ -84,8 +87,9 @@ export const sendOtpEmail = async (email, otp) => {
 
   try {
     await transporter.sendMail({
-      from: getSanitizedEmailUser(),
+      from: `Zepto OTP <${getSanitizedEmailUser()}>`,
       to: email,
+      replyTo: getSanitizedEmailUser(),
       subject: "Your OTP Code - Login Verification",
       text: `Your OTP is ${otp}. It expires in 5 minutes.`,
     });
