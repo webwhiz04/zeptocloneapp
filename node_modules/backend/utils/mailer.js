@@ -37,8 +37,8 @@ export const getMailSendErrorMessage = (error) => {
     return "Invalid email payload. Check EMAIL_FROM, recipient address, and message fields.";
   }
 
-  if (!isProduction && error?.message) {
-    return `Server error while sending email: ${error.message}`;
+  if (error?.message) {
+    return `Email error: ${error.message}`;
   }
 
   return "Server error while sending email";
@@ -53,16 +53,16 @@ const createTransporter = () => {
   // Final definitive configuration for Brevo SMTP:
   // 1. Host: smtp-relay.brevo.com
   // 2. Port: 587 (Standard for Brevo)
-  // 3. Family: 4 (Forces IPv4 to bypass Render networking issues)
   const transporter = nodemailer.createTransport({
     host: "smtp-relay.brevo.com",
     port: 587,
     secure: false, // TLS via STARTTLS
     auth: { user, pass },
-    family: 4, 
-    connectionTimeout: 60000, 
-    greetingTimeout: 60000,
-    socketTimeout: 60000,
+    // Only use family: 4 if explicitly needed (e.g. Render)
+    // Removed for better Vercel compatibility unless proven otherwise
+    connectionTimeout: 10000, // Reduced for serverless
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
   });
 
   return transporter;
