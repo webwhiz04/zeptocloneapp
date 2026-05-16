@@ -128,24 +128,24 @@ function AdminUserOrders() {
     };
 
     return (
-        <div className="admin-orders-container">
-            <header className="admin-content-header">
+        <div className="adminOrdersContainer">
+            <header className="adminContentHeader">
                 <h1>User Orders</h1>
-                <button type="button" className="refresh-btn" onClick={loadOrders}>
+                <button type="button" className="refreshBtn" onClick={loadOrders}>
                     Refresh
                 </button>
             </header>
 
-            {errorMessage ? <p className="admin-error">{errorMessage}</p> : null}
+            {errorMessage ? <p className="adminError">{errorMessage}</p> : null}
 
             {isLoading ? (
-                <div className="admin-loading-card">Loading user orders...</div>
+                <div className="adminLoadingCard">Loading user orders...</div>
             ) : groupedOrders.length === 0 ? (
-                <div className="admin-empty-card">No orders available.</div>
+                <div className="adminEmptyCard">No orders available.</div>
             ) : (
-                <div className="orders-table-card">
-                    <div className="table-wrap">
-                        <table className="admin-orders-table">
+                <div className="ordersTableCard">
+                    <div className="tableWrap">
+                        <table className="adminOrdersTable">
                             <thead>
                                 <tr>
                                     <th>User</th>
@@ -167,46 +167,46 @@ function AdminUserOrders() {
 
                                     return (
                                         <tr key={`${order.userEmail}-${orderKey}`}>
-                                            <td className="user-cell">
-                                                <div className="cell-stack">
-                                                    <span className="order-email">{order.userEmail}</span>
-                                                    <span className="order-key">ID: {orderKey || "N/A"}</span>
+                                            <td className="userCell">
+                                                <div className="cellStack">
+                                                    <span className="orderEmail">{order.userEmail}</span>
+                                                    <span className="orderKey">ID: {orderKey || "N/A"}</span>
                                                 </div>
                                             </td>
-                                            <td className="date-cell">
-                                                <span className="cell-meta">{formatDateTime(order.orderedAt || order.paymentDetails?.paidAt)}</span>
+                                            <td className="dateCell">
+                                                <span className="cellMeta">{formatDateTime(order.orderedAt || order.paymentDetails?.paidAt)}</span>
                                             </td>
-                                            <td className="address-cell">
-                                                <div className="address-stack">
+                                            <td className="addressCell">
+                                                <div className="addressStack">
                                                     {addressLines.map((line) => (
                                                         <p key={line}>{line}</p>
                                                     ))}
                                                 </div>
                                             </td>
-                                            <td className="products-cell">
-                                                <div className="products-list">
+                                            <td className="productsCell">
+                                                <div className="productsList">
                                                     {items.map((item, index) => (
-                                                        <div className="product-row" key={`${item.productId}-${index}`}>
+                                                        <div className="productRow" key={`${item.productId}-${index}`}>
                                                             <img src={getImageUrl(item.image)} alt={item.name} />
-                                                            <span className="product-name-mini">{item.name} x {item.quantity}</span>
+                                                            <span className="productNameMini">{item.name} x {item.quantity}</span>
                                                         </div>
                                                     ))}
                                                 </div>
                                             </td>
-                                            <td className="payment-cell">
-                                                <div className="cell-stack">
-                                                    <span className="method-tag">{order.paymentDetails?.method || "COD"}</span>
-                                                    <span className="payment-id">{order.paymentDetails?.paymentId || "N/A"}</span>
+                                            <td className="paymentCell">
+                                                <div className="cellStack">
+                                                    <span className="methodTag">{order.paymentDetails?.method || "COD"}</span>
+                                                    <span className="paymentId">{order.paymentDetails?.paymentId || "N/A"}</span>
                                                 </div>
                                             </td>
-                                            <td className="total-cell">
-                                                <strong className="total-amount">{formatMoney(order.totalAmount)}</strong>
+                                            <td className="totalCell">
+                                                <strong className="totalAmount">{formatMoney(order.totalAmount)}</strong>
                                             </td>
-                                            <td className="status-cell">
+                                            <td className="statusCell">
                                                 <span className={`status-badge ${order.status?.toLowerCase()}`}>{order.status || "Placed"}</span>
                                             </td>
-                                            <td className="action-cell">
-                                                <div className="status-actions">
+                                            <td className="actionCell">
+                                                <div className="statusActions">
                                                     <select
                                                         value={status}
                                                         onChange={(e) => handleStatusChange(orderKey, e.target.value)}
@@ -220,7 +220,7 @@ function AdminUserOrders() {
                                                     </select>
                                                     <button
                                                         type="button"
-                                                        className="save-status-btn"
+                                                        className="saveStatusBtn"
                                                         onClick={() => handleUpdateStatus(order)}
                                                         disabled={updatingKey === orderKey}
                                                     >

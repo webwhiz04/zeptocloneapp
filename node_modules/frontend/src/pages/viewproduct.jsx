@@ -103,7 +103,7 @@ function ViewProduct() {
     };
 
     return (
-        <div className="view-product-container">
+        <div className="viewProductContainer">
             {isEdit ? (
                 <AddProduct
                     isEdit={isEdit}
@@ -114,17 +114,17 @@ function ViewProduct() {
                     embedded
                 />
             ) : (
-                <div className="view-table-section">
+                <div className="viewTableSection">
                     <div className="viewheader">
                         <h2>Manage Products</h2>
-                        <div className="view-actions">
-                            <span className="product-count">{products.length} Products</span>
+                        <div className="viewActions">
+                            <span className="productCount">{products.length} Products</span>
                         </div>
                     </div>
                     {message && <p className={`message ${message.includes("removed") ? "success" : ""}`}>{message}</p>}
 
-                    <div className="product-table-card">
-                        <table className="admin-product-table">
+                    <div className="productTableCard">
+                        <table className="adminProductTable">
                             <thead>
                                 <tr>
                                     <th>Image</th>
@@ -139,43 +139,43 @@ function ViewProduct() {
                             <tbody>
                                 {products.length === 0 && (
                                     <tr>
-                                        <td colSpan={7} className="empty-row">No products found</td>
+                                        <td colSpan={7} className="emptyRow">No products found</td>
                                     </tr>
                                 )}
                                 {products.map((product) => (
                                     <tr key={product._id}>
-                                        <td className="img-cell">
+                                        <td className="imgCell">
                                             <img
                                                 src={getImageUrl(product.image)}
                                                 alt={product.name || "product"}
-                                                className="table-img"
+                                                className="tableImg"
                                             />
                                         </td>
-                                        <td className="name-cell">
-                                            <span className="product-name">{getDisplayValue(product.name)}</span>
+                                        <td className="nameCell">
+                                            <span className="productName">{getDisplayValue(product.name)}</span>
                                         </td>
-                                        <td className="price-cell">
+                                        <td className="priceCell">
                                             ₹{getDisplayValue(product.price)}
                                         </td>
-                                        <td className="category-cell">
+                                        <td className="categoryCell">
                                             {product.categories?.length > 0 ? (
-                                                <div className="tag-container">
-                                                    {product.categories.map(cat => <span key={cat} className="category-tag">{cat}</span>)}
+                                                <div className="tagContainer">
+                                                    {product.categories.map(cat => <span key={cat} className="categoryTag">{cat}</span>)}
                                                 </div>
                                             ) : "-"}
                                         </td>
-                                        <td className="stock-cell">
+                                        <td className="stockCell">
                                             <span className={`stock-status ${product.quantity > 0 ? "in-stock" : "out-of-stock"}`}>
                                                 {getDisplayValue(product.quantity)}
                                             </span>
                                         </td>
-                                        <td className="desc-cell">
-                                            <span className="product-description">{getDisplayValue(product.description)}</span>
+                                        <td className="descCell">
+                                            <span className="productDescription">{getDisplayValue(product.description)}</span>
                                         </td>
-                                        <td className="action-cell">
-                                            <div className="action-buttons">
-                                                <button type="button" className="edit-btn" onClick={() => startEdit(product)}>Edit</button>
-                                                <button type="button" className="remove-btn" onClick={() => removeProduct(product._id)}>Remove</button>
+                                        <td className="actionCell">
+                                            <div className="actionButtons">
+                                                <button type="button" className="editBtn" onClick={() => startEdit(product)}>Edit</button>
+                                                <button type="button" className="removeBtn" onClick={() => removeProduct(product._id)}>Remove</button>
                                             </div>
                                         </td>
                                     </tr>

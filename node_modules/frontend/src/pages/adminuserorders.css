@@ -1,8 +1,8 @@
-.admin-orders-container {
+.adminOrdersContainer {
     width: 100%;
 }
 
-.refresh-btn {
+.refreshBtn {
     padding: 8px 16px;
     background-color: #3e0075;
     color: #fff;
@@ -13,11 +13,11 @@
     transition: opacity 0.2s;
 }
 
-.refresh-btn:hover {
+.refreshBtn:hover {
     opacity: 0.9;
 }
 
-.admin-error {
+.adminError {
     background-color: #ffebee;
     color: #e53935;
     padding: 12px 20px;
@@ -25,7 +25,7 @@
     margin-bottom: 20px;
 }
 
-.admin-loading-card, .admin-empty-card {
+.adminLoadingCard, .adminEmptyCard {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 12px;
@@ -34,21 +34,21 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.orders-table-card {
+.ordersTableCard {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     overflow-x: auto;
 }
 
-.admin-orders-table {
+.adminOrdersTable {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
     min-width: 1000px;
 }
 
-.admin-orders-table th {
+.adminOrdersTable th {
     background-color: #f8f9fa;
     padding: 15px 20px;
     font-size: 14px;
@@ -57,71 +57,71 @@
     border-bottom: 1px solid #eee;
 }
 
-.admin-orders-table td {
+.adminOrdersTable td {
     padding: 15px 20px;
     border-bottom: 1px solid #f5f5f5;
     vertical-align: top;
 }
 
-.cell-stack {
+.cellStack {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.order-email {
+.orderEmail {
     font-weight: 600;
     color: #333;
     font-size: 14px;
 }
 
-.order-key, .payment-id {
+.orderKey, .paymentId {
     font-size: 12px;
     color: #888;
 }
 
-.cell-meta {
+.cellMeta {
     font-size: 13px;
     color: #666;
 }
 
-.address-stack {
+.addressStack {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.address-stack p {
+.addressStack p {
     margin: 0;
     font-size: 13px;
     color: #666;
 }
 
-.products-list {
+.productsList {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.product-row {
+.productRow {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.product-row img {
+.productRow img {
     width: 32px;
     height: 32px;
     border-radius: 4px;
     object-fit: cover;
 }
 
-.product-name-mini {
+.productNameMini {
     font-size: 13px;
     color: #444;
 }
 
-.method-tag {
+.methodTag {
     background-color: #f3e5f5;
     color: #3e0075;
     padding: 2px 8px;
@@ -133,12 +133,12 @@
     width: fit-content;
 }
 
-.total-amount {
+.totalAmount {
     color: #3e0075;
     font-size: 15px;
 }
 
-.status-badge {
+.statusBadge {
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 12px;
@@ -146,25 +146,25 @@
     text-transform: capitalize;
 }
 
-.status-badge.placed { background-color: #e3f2fd; color: #1e88e5; }
-.status-badge.processing { background-color: #fff3e0; color: #fb8c00; }
-.status-badge.shipped { background-color: #f3e5f5; color: #8e24aa; }
-.status-badge.delivered { background-color: #e8f5e9; color: #43a047; }
+.statusBadge.placed { background-color: #e3f2fd; color: #1e88e5; }
+.statusBadge.processing { background-color: #fff3e0; color: #fb8c00; }
+.statusBadge.shipped { background-color: #f3e5f5; color: #8e24aa; }
+.statusBadge.delivered { background-color: #e8f5e9; color: #43a047; }
 
-.status-actions {
+.statusActions {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.status-actions select {
+.statusActions select {
     padding: 6px 10px;
     border-radius: 6px;
     border: 1px solid #ddd;
     font-size: 13px;
 }
 
-.save-status-btn {
+.saveStatusBtn {
     padding: 6px 12px;
     background-color: #3e0075;
     color: #fff;
@@ -175,7 +175,7 @@
     cursor: pointer;
 }
 
-.save-status-btn:disabled {
+.saveStatusBtn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }

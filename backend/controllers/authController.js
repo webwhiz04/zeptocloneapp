@@ -22,7 +22,7 @@ export const sendOtpHandler = async (req, res) => {
 
     const emailResult = await sendOtpEmail(email, otp);
 
-    // If it's a devMode success (meaning mail failed but we allow it in dev)
+    
     if (emailResult.devMode) {
       console.log(`DEV OTP for ${email}: ${otp}`);
       

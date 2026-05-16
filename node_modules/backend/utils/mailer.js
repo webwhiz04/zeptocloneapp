@@ -147,12 +147,12 @@ const formatFromAddress = () => {
     return "Zepto Admin <zeptoecommerce@gmail.com>";
   }
 
-  // If the user provided the full format like "Company <email@company.com>", use it as is.
+  
   if (from.includes("<") && from.includes(">")) {
     return from;
   }
 
-  // If they only provided an email, we wrap it with the company name "Zepto Admin".
+  
   return `Zepto Admin <${from}>`;
 };
 
@@ -293,7 +293,7 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     console.log(`Email sent to [${to}]. Provider: ${info.provider || "smtp"}. MessageId: ${info.messageId}`);
     return { success: true, data: info };
   } catch (error) {
-    // Log full error details to server logs for debugging.
+    
     console.error("Email send error:", {
       message: error?.message,
       code: error?.code,

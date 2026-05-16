@@ -60,7 +60,7 @@ export const getAdminStats = async (req, res) => {
         const totalProducts = await Product.countDocuments();
         const totalUsers = await User.countDocuments();
         
-        // Fetch all users to calculate orders and revenue accurately
+        
         const allUsers = await User.find({}).select("orders");
         
         let totalOrders = 0;

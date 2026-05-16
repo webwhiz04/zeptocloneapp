@@ -21,29 +21,29 @@ const AdminLayout = ({ children }) => {
     ];
 
     return (
-        <div className="admin-layout">
-            <div className="admin-container">
-                <aside className="admin-sidebar">
-                    <div className="admin-sidebar-header">
-                        <Link to="/admindashboard" className="admin-logo-link">
-                            <img src="/logo.svg" alt="Zepto Logo" className="admin-zepto-logo" />
-                            <span className="logo-text-admin">Admin</span>
+        <div className="adminLayout">
+            <div className="adminContainer">
+                <aside className="adminSidebar">
+                    <div className="adminSidebarHeader">
+                        <Link to="/admindashboard" className="adminLogoLink">
+                            <img src="/logo.svg" alt="Zepto Logo" className="adminZeptoLogo" />
+                            <span className="logoTextAdmin">Admin</span>
                         </Link>
                     </div>
-                    <nav className="admin-nav">
+                    <nav className="adminNav">
                         {menuItems.map((item) => (
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`admin-nav-item ${location.pathname === item.path ? "active" : ""}`}
+                                className={`adminNavItem ${location.pathname === item.path ? "active" : ""}`}
                             >
-                                <span className="admin-nav-icon">{item.icon}</span>
-                                <span className="admin-nav-label">{item.label}</span>
+                                <span className="adminNavIcon">{item.icon}</span>
+                                <span className="adminNavLabel">{item.label}</span>
                             </Link>
                         ))}
                     </nav>
                 </aside>
-                <main className="admin-main">
+                <main className="adminMain">
                     {children}
                 </main>
             </div>

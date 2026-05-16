@@ -4,10 +4,10 @@ import { getRazorpayConfig } from "../controllers/paymentController.js";
 
 const router = express.Router();
 
-// Razorpay config
+
 router.get("/config", getRazorpayConfig);
 
-// Checkout routes
+
 router.post("/checkout", checkoutOnline);
 router.post("/verify-payment", verifyOnlinePayment);
 

@@ -117,104 +117,104 @@ function AdminDashboard() {
     const pieData = getPieSegments(stats.statusBreakdown);
 
     return (
-        <div className="admin-dashboard-content">
-            <header className="admin-content-header">
+        <div className="adminDashboardContent">
+            <header className="adminContentHeader">
                 <h1>Welcome to Admin Dashboard</h1>
-                <p className="admin-subtitle">ZEPTO CLONE</p>
+                <p className="adminSubtitle">ZEPTO CLONE</p>
             </header>
 
-            <div className="admin-stats-grid">
-                <div className="stat-card">
-                    <div className="stat-icon products-icon">
+            <div className="adminStatsGrid">
+                <div className="statCard">
+                    <div className="statIcon productsIcon">
                         <FaBox />
                     </div>
-                    <div className="stat-details">
+                    <div className="statDetails">
                         <h3>{stats.totalProducts}</h3>
                         <p>Total Products</p>
                     </div>
                 </div>
 
-                <div className="stat-card">
-                    <div className="stat-icon orders-icon">
+                <div className="statCard">
+                    <div className="statIcon ordersIcon">
                         <FaClipboardList />
                     </div>
-                    <div className="stat-details">
+                    <div className="statDetails">
                         <h3>{stats.totalOrders}</h3>
                         <p>Total Orders</p>
                     </div>
                 </div>
 
-                <div className="stat-card">
-                    <div className="stat-icon users-icon">
+                <div className="statCard">
+                    <div className="statIcon usersIcon">
                         <FaUsers />
                     </div>
-                    <div className="stat-details">
+                    <div className="statDetails">
                         <h3>{stats.totalUsers}</h3>
                         <p>Total Users</p>
                     </div>
                 </div>
 
-                <div className="stat-card">
-                    <div className="stat-icon revenue-icon">
+                <div className="statCard">
+                    <div className="statIcon revenueIcon">
                         <FaRupeeSign />
                     </div>
-                    <div className="stat-details">
+                    <div className="statDetails">
                         <h3>₹{stats.totalRevenue.toFixed(2)}</h3>
                         <p>Total Revenue</p>
                     </div>
                 </div>
             </div>
 
-            <div className="admin-charts-section">
-                <div className="chart-container revenue-trend">
+            <div className="adminChartsSection">
+                <div className="chartContainer revenueTrend">
                     <h3>Revenue Trend (Last 1 Month)</h3>
-                    <div className="placeholder-chart">
-                        <div className="line-chart-wrap">
-                            <div className="chart-y-label">Y Axis: Revenue (INR)</div>
-                            <svg viewBox="0 0 560 260" className="line-chart-svg" role="img" aria-label="Revenue chart with x and y axis">
-                                <line x1="42" y1="218" x2="528" y2="218" className="chart-axis" />
-                                <line x1="42" y1="42" x2="42" y2="218" className="chart-axis" />
+                    <div className="placeholderChart">
+                        <div className="lineChartWrap">
+                            <div className="chartYLabel">Y Axis: Revenue (INR)</div>
+                            <svg viewBox="0 0 560 260" className="lineChartSvg" role="img" aria-label="Revenue chart with x and y axis">
+                                <line x1="42" y1="218" x2="528" y2="218" className="chartAxis" />
+                                <line x1="42" y1="42" x2="42" y2="218" className="chartAxis" />
 
                                 {yAxisTicks.map((tick) => (
                                     <g key={tick.y}>
-                                        <line x1="42" y1={tick.y} x2="528" y2={tick.y} className="chart-grid" />
-                                        <text x="8" y={tick.y + 4} className="chart-tick-label">{formatRevenueLabel(tick.value)}</text>
+                                        <line x1="42" y1={tick.y} x2="528" y2={tick.y} className="chartGrid" />
+                                        <text x="8" y={tick.y + 4} className="chartTickLabel">{formatRevenueLabel(tick.value)}</text>
                                     </g>
                                 ))}
 
-                                {linePath ? <path d={linePath} className="chart-line" /> : null}
+                                {linePath ? <path d={linePath} className="chartLine" /> : null}
 
                                 {chartData.points.map((point) => (
                                     <g key={`${point.label}-${point.x}`}>
-                                        <circle cx={point.x} cy={point.y} r="4" className="chart-dot" />
-                                        <text x={point.x} y="236" textAnchor="middle" className="chart-tick-label">
+                                        <circle cx={point.x} cy={point.y} r="4" className="chartDot" />
+                                        <text x={point.x} y="236" textAnchor="middle" className="chartTickLabel">
                                             {point.label}
                                         </text>
                                     </g>
                                 ))}
                             </svg>
-                            <div className="chart-x-label">X Axis: Date</div>
+                            <div className="chartXLabel">X Axis: Date</div>
                         </div>
                     </div>
                 </div>
-                <div className="chart-container order-status">
+                <div className="chartContainer orderStatus">
                     <h3>Order Status Distribution</h3>
-                    <div className="placeholder-chart">
-                        <div className="status-pie-wrap">
+                    <div className="placeholderChart">
+                        <div className="statusPieWrap">
                             <div
-                                className="pie-chart-live"
+                                className="pieChartLive"
                                 style={{ background: `conic-gradient(${pieData.conicStops})` }}
                                 role="img"
                                 aria-label="Pie chart for placed processing shipped out for delivery"
                             >
-                                <span className="pie-total">{pieData.total}</span>
+                                <span className="pieTotal">{pieData.total}</span>
                             </div>
-                            <div className="pie-legend">
+                            <div className="pieLegend">
                                 {pieData.items.map((item) => (
-                                    <div key={item.status} className="legend-row">
-                                        <span className="legend-dot" style={{ backgroundColor: STATUS_COLORS[item.status] }}></span>
-                                        <span className="legend-label">{item.status}</span>
-                                        <span className="legend-value">{item.value} ({item.percentage.toFixed(0)}%)</span>
+                                    <div key={item.status} className="legendRow">
+                                        <span className="legendDot" style={{ backgroundColor: STATUS_COLORS[item.status] }}></span>
+                                        <span className="legendLabel">{item.status}</span>
+                                        <span className="legendValue">{item.value} ({item.percentage.toFixed(0)}%)</span>
                                     </div>
                                 ))}
                             </div>

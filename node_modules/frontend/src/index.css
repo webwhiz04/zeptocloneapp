@@ -6,10 +6,10 @@ body {
 	margin: 0;
 	font-family: Arial, Helvetica, sans-serif;
 	background: #ffffff;
-    padding-top: 130px; /* Offset for the fixed nav-container */
+    padding-top: 130px; 
 }
 
-body.admin-mode {
+body.adminMode {
     padding-top: 0;
 }
 
@@ -18,12 +18,12 @@ body.admin-mode {
         padding-top: 200px;
     }
 
-	body.admin-mode {
+	body.adminMode {
 		padding-top: 0;
 	}
 }
 
-.cart-toast {
+.cartToast {
 	position: fixed;
 	left: 50%;
 	bottom: 42px;
@@ -42,7 +42,7 @@ body.admin-mode {
 	z-index: 1400;
 }
 
-.cart-toast.show {
+.cartToast.show {
 	transform: translate(-50%, 0);
 	opacity: 1;
 }

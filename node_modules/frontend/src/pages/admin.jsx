@@ -70,37 +70,7 @@ function Admin() {
  
                 </div>
 
-                {/* <div className="rightside">
-                    <span className="close" onClick={handleClose}>X</span>
-                    <div className="phone">
-                        <img
-                            src="https://cdn.zeptonow.com/web-static-assets-prod/artifacts/14.11.1/tr:w-100,ar-100-100,pr-true,f-auto,q-40/images/get-the-app/get-the-app-phone.png"
-                            alt="phone"
-                        />
-                    </div>
-
-                    <h2 className="lh2">
-                        Order faster & <br /> easier <br /> everytime
-                    </h2>
-
-                    <p>with zepto app</p>
-
-                    <div className="appbtn">
-                        <img
-                            src="https://cdn.zeptonow.com/web-static-assets-prod/artifacts/14.11.1/tr:w-180,ar-180-46,pr-true,f-auto,q-40/images/app-stores/download-play-store.svg"
-                            className="img"
-                            alt="playstore"
-                        />
-                    </div>
-
-                    <div className="appbtn">
-                        <img
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0eOmm8lR_dgM2e5hko5IWEPgFeG5HtLYU1A&s"
-                            className="img"
-                            alt="appstore"
-                        />
-                    </div>
-                </div> */}
+                {}
 
             </div>
         </div>

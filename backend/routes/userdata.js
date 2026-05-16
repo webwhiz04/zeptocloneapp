@@ -16,23 +16,23 @@ import {
 
 const router = express.Router();
 
-// Cart routes
+
 router.get("/cart", getCart);
 router.post("/cart/add", addToCart);
 router.patch("/cart/item", updateCartQuantity);
-router.post("/remove-from-cart", removeFromCart); // Optional: keep for backward compatibility if needed
+router.post("/remove-from-cart", removeFromCart); 
 
-// Shipping address routes
+
 router.get("/shipping-address", getShippingAddress);
 router.post("/shipping-address", saveShippingAddress);
 
-// Order routes (for user)
+
 router.post("/orders/place", placeCodOrder);
 router.get("/orders", getOrders);
 
-// Admin order routes
+
 router.get("/admin/orders", getAdminOrders);
 router.patch("/admin/orders/status", updateOrderStatus);
-router.post("/admin/update-order-status", updateOrderStatus); // Keep for legacy if needed
+router.post("/admin/update-order-status", updateOrderStatus); 
 
 export default router;

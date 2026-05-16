@@ -38,7 +38,7 @@ if (!fs.existsSync(uploadsDir)) {
 const app = express();
 const PORT = config.PORT || 5000;
 
-// Trust the proxy (Render uses a reverse proxy)
+
 app.set("trust proxy", 1);
 
 app.use(
@@ -58,11 +58,11 @@ app.use("/api/", limiter);
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
+      
       if (!origin) return callback(null, true);
       
       const isAllowed = allowedOrigins.some(allowed => origin.startsWith(allowed)) || 
-                        origin.endsWith(".vercel.app"); // Allow all vercel deployments
+                        origin.endsWith(".vercel.app"); 
       
       if (isAllowed) {
         callback(null, true);
