@@ -1,22 +1,26 @@
 import nodemailer from "nodemailer";
-import dns from "dns";
 import config from "../config/config.js";
 
-// Custom DNS lookup to strictly force IPv4
-const lookupIPv4 = (hostname, options, callback) => {
-  return dns.lookup(hostname, { family: 4 }, callback);
-};
-
 const isProduction = config.NODE_ENV === "production";
+const RESEND_API_URL = "https://api.resend.com/emails";
+
+const hasResendConfig = () => Boolean(config.RESEND_API_KEY?.trim() && config.EMAIL_FROM?.trim());
+const hasSmtpConfig = () => Boolean(config.EMAIL_USER?.trim() && config.EMAIL_PASS?.trim());
 
 export const getSanitizedEmailFrom = () => config.EMAIL_FROM?.trim() || config.EMAIL_USER?.trim();
 
 export const getMailConfigError = () => {
+  const resendKey = config.RESEND_API_KEY?.trim();
+  const from = getSanitizedEmailFrom();
   const user = config.EMAIL_USER?.trim();
   const pass = config.EMAIL_PASS?.trim();
 
-  if (!user || !pass) {
-    return "EMAIL_USER and EMAIL_PASS environment variables are missing";
+  if (resendKey && !from) {
+    return "EMAIL_FROM is required when using RESEND_API_KEY";
+  }
+
+  if (!resendKey && (!user || !pass)) {
+    return "Missing mail configuration. Set RESEND_API_KEY + EMAIL_FROM, or EMAIL_USER + EMAIL_PASS";
   }
 
   return null;
@@ -31,6 +35,10 @@ export const getMailSendErrorMessage = (error) => {
     message.includes("invalid login")
   ) {
     return "SMTP authentication failed. Check EMAIL_USER and EMAIL_PASS.";
+  }
+
+  if (message.includes("resend") || message.includes("unauthorized") || message.includes("invalid_api_key")) {
+    return "Resend API auth failed. Check RESEND_API_KEY and EMAIL_FROM sender verification.";
   }
 
   if (message.includes("invalid to") || message.includes("invalid from") || message.includes("missing to")) {
@@ -50,19 +58,18 @@ const createTransporter = () => {
 
   if (!user || !pass) return null;
 
-  // Final definitive configuration for Brevo SMTP:
-  // 1. Host: smtp-relay.brevo.com
-  // 2. Port: 587 (Standard for Brevo)
-  // 3. Family: 4 (CRITICAL for Render to bypass IPv6 timeout issues)
+  const port = Number(config.SMTP_PORT || 587);
+
   const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false, // TLS via STARTTLS
+    host: config.SMTP_HOST || "smtp-relay.brevo.com",
+    port,
+    secure: Boolean(config.SMTP_SECURE),
     auth: { user, pass },
-    family: 4, 
-    connectionTimeout: 30000, 
+    family: 4,
+    connectionTimeout: 30000,
     greetingTimeout: 30000,
     socketTimeout: 30000,
+    requireTLS: port === 587,
   });
 
   return transporter;
@@ -102,6 +109,51 @@ const normalizeAttachments = (attachments = []) =>
       };
     });
 
+const normalizeResendAttachments = (attachments = []) =>
+  normalizeAttachments(attachments).map((attachment) => ({
+    filename: attachment.filename,
+    content: attachment.content.toString("base64"),
+    content_type: attachment.contentType,
+  }));
+
+const sendWithResend = async ({ to, subject, text, html, replyTo, attachments = [] }) => {
+  const payload = {
+    from: formatFromAddress(),
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    text,
+    html,
+    reply_to: replyTo || getSanitizedEmailFrom(),
+  };
+
+  if (attachments.length) {
+    payload.attachments = normalizeResendAttachments(attachments);
+  }
+
+  const response = await fetch(RESEND_API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${config.RESEND_API_KEY?.trim()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const body = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const apiError = body?.message || body?.error || `Resend API error ${response.status}`;
+    const error = new Error(apiError);
+    error.code = "ERESEND";
+    throw error;
+  }
+
+  return {
+    messageId: body?.id,
+    provider: "resend",
+  };
+};
+
 export const sendMail = async ({ to, subject, text, html, replyTo, attachments = [] }) => {
   const mailConfigError = getMailConfigError();
 
@@ -114,26 +166,31 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     return { success: false, message: mailConfigError };
   }
 
-  const transporter = createTransporter();
-
-  if (!transporter) {
-    return { success: false, message: "Email transporter configuration is invalid" };
-  }
-
-  const fromAddress = formatFromAddress();
-
   try {
-    const info = await transporter.sendMail({
-      from: fromAddress,
-      to,
-      subject,
-      text,
-      html,
-      replyTo: replyTo || getSanitizedEmailFrom(),
-      attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
-    });
+    const useResend = hasResendConfig();
+    let info;
 
-    console.log(`Email sent from [${fromAddress}] to [${to}]. Accepted by Brevo. MessageId: ${info.messageId}`);
+    if (useResend) {
+      info = await sendWithResend({ to, subject, text, html, replyTo, attachments });
+    } else {
+      const transporter = createTransporter();
+      if (!transporter) {
+        return { success: false, message: "Email transporter configuration is invalid" };
+      }
+
+      const fromAddress = formatFromAddress();
+      info = await transporter.sendMail({
+        from: fromAddress,
+        to,
+        subject,
+        text,
+        html,
+        replyTo: replyTo || getSanitizedEmailFrom(),
+        attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
+      });
+    }
+
+    console.log(`Email sent to [${to}]. Provider: ${info.provider || "smtp"}. MessageId: ${info.messageId}`);
     return { success: true, data: info };
   } catch (error) {
     // Log full error details to server logs for debugging.

@@ -5,8 +5,12 @@ const config = {
     PORT: process.env.PORT || 5000,
     MONGO_URI: process.env.MONGO_URI,
     // Email Config (Brevo SMTP)
-    EMAIL_USER: process.env.EMAIL_USER || "",
-    EMAIL_PASS: process.env.EMAIL_PASS || "",
+    EMAIL_USER: process.env.EMAIL_USER || process.env.SMTP_USER || "",
+    EMAIL_PASS: process.env.EMAIL_PASS || process.env.SMTP_PASS || "",
+    SMTP_HOST: process.env.SMTP_HOST || "smtp-relay.brevo.com",
+    SMTP_PORT: Number(process.env.SMTP_PORT || 587),
+    SMTP_SECURE: String(process.env.SMTP_SECURE || "false").toLowerCase() === "true",
+    RESEND_API_KEY: process.env.RESEND_API_KEY || "",
     // Use EMAIL_FROM from env, or fall back to EMAIL_USER
     EMAIL_FROM: process.env.EMAIL_FROM || process.env.EMAIL_USER || "zeptoecommerce@gmail.com",
     
