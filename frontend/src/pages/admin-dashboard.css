@@ -1,17 +1,17 @@
-.admin-dashboard-content {
+.adminDashboardContent {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
-.admin-content-header h1 {
+.adminContentHeader h1 {
     margin: 0;
     font-size: 28px;
     color: #333;
     font-weight: 600;
 }
 
-.admin-subtitle {
+.adminSubtitle {
     margin: 5px 0 0;
     font-size: 14px;
     color: #888;
@@ -19,13 +19,13 @@
     letter-spacing: 1px;
 }
 
-.admin-stats-grid {
+.adminStatsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
 }
 
-.stat-card {
+.statCard {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 12px;
@@ -35,7 +35,7 @@
     gap: 20px;
 }
 
-.stat-icon {
+.statIcon {
     width: 60px;
     height: 60px;
     border-radius: 12px;
@@ -45,59 +45,59 @@
     font-size: 24px;
 }
 
-.products-icon {
+.productsIcon {
     background-color: #e3f2fd;
     color: #1e88e5;
 }
 
-.orders-icon {
+.ordersIcon {
     background-color: #e8f5e9;
     color: #43a047;
 }
 
-.users-icon {
+.usersIcon {
     background-color: #f3e5f5;
     color: #8e24aa;
 }
 
-.revenue-icon {
+.revenueIcon {
     background-color: #fff3e0;
     color: #fb8c00;
 }
 
-.stat-details h3 {
+.statDetails h3 {
     margin: 0;
     font-size: 24px;
     color: #333;
     font-weight: 700;
 }
 
-.stat-details p {
+.statDetails p {
     margin: 5px 0 0;
     font-size: 14px;
     color: #666;
 }
 
-.admin-charts-section {
+.adminChartsSection {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
 
-.chart-container {
+.chartContainer {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.chart-container h3 {
+.chartContainer h3 {
     margin: 0 0 20px;
     font-size: 18px;
     color: #333;
 }
 
-.placeholder-chart {
+.placeholderChart {
     min-height: 250px;
     display: flex;
     align-items: center;
@@ -107,60 +107,60 @@
     border: 1px dashed #ddd;
 }
 
-.line-chart-wrap {
+.lineChartWrap {
     width: 100%;
     display: grid;
     gap: 8px;
 }
 
-.chart-y-label,
-.chart-x-label {
+.chartYLabel,
+.chartXLabel {
     font-size: 12px;
     color: #666;
     font-weight: 600;
 }
 
-.chart-y-label {
+.chartYLabel {
     padding-left: 6px;
 }
 
-.chart-x-label {
+.chartXLabel {
     text-align: center;
 }
 
-.line-chart-svg {
+.lineChartSvg {
     width: 100%;
     height: 260px;
 }
 
-.chart-axis {
+.chartAxis {
     stroke: #b7c0cb;
     stroke-width: 1.6;
 }
 
-.chart-grid {
+.chartGrid {
     stroke: #e7ebf0;
     stroke-width: 1;
 }
 
-.chart-line {
+.chartLine {
     fill: none;
     stroke: #3e0075;
     stroke-width: 3;
 }
 
-.chart-dot {
+.chartDot {
     fill: #ff3366;
     stroke: #ffffff;
     stroke-width: 1.5;
 }
 
-.chart-tick-label {
+.chartTickLabel {
     fill: #667085;
     font-size: 11px;
 }
 
-.status-pie-wrap {
+.statusPieWrap {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -168,7 +168,7 @@
     padding: 16px;
 }
 
-.pie-chart-live {
+.pieChartLive {
     width: 170px;
     height: 170px;
     border-radius: 50%;
@@ -179,7 +179,7 @@
     flex-shrink: 0;
 }
 
-.pie-chart-live::after {
+.pieChartLive::after {
     content: "";
     width: 72px;
     height: 72px;
@@ -188,7 +188,7 @@
     position: absolute;
 }
 
-.pie-total {
+.pieTotal {
     position: relative;
     z-index: 1;
     font-size: 18px;
@@ -196,44 +196,44 @@
     color: #334155;
 }
 
-.pie-legend {
+.pieLegend {
     display: grid;
     gap: 10px;
     width: 100%;
 }
 
-.legend-row {
+.legendRow {
     display: grid;
     grid-template-columns: 14px 1fr auto;
     align-items: center;
     gap: 10px;
 }
 
-.legend-dot {
+.legendDot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
 }
 
-.legend-label {
+.legendLabel {
     color: #475467;
     font-size: 13px;
     font-weight: 600;
 }
 
-.legend-value {
+.legendValue {
     color: #667085;
     font-size: 12px;
 }
 
 @media (max-width: 1100px) {
-    .admin-charts-section {
+    .adminChartsSection {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 700px) {
-    .status-pie-wrap {
+    .statusPieWrap {
         flex-direction: column;
         align-items: flex-start;
     }

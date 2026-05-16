@@ -194,16 +194,16 @@ function AddProduct({
 
     return (
         <div className={`add-product-container${embedded ? " embedded" : ""}`}>
-            <form className="admin-form" onSubmit={handleSubmit} autoComplete="off">
-                <header className="admin-content-header">
+            <form className="adminForm" onSubmit={handleSubmit} autoComplete="off">
+                <header className="adminContentHeader">
                     <h1>{editMode ? "Edit Product" : "Add Product"}</h1>
                 </header>
                 
                 {message && <p className={`form-message ${message.includes("successfully") ? "success" : "error"}`}>{message}</p>}
-                {loading && <p className="form-message">Loading product...</p>}
+                {loading && <p className="formMessage">Loading product...</p>}
 
-                <div className="form-grid">
-                    <div className="form-group">
+                <div className="formGrid">
+                    <div className="formGroup">
                         <label htmlFor="productName">Product Name</label>
                         <input
                             id="productName"
@@ -215,8 +215,8 @@ function AddProduct({
                         />
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="formRow">
+                        <div className="formGroup">
                             <label htmlFor="price">Price (₹)</label>
                             <input
                                 id="price"
@@ -228,7 +228,7 @@ function AddProduct({
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="formGroup">
                             <label htmlFor="quantity">Stock Quantity</label>
                             <input
                                 id="quantity"
@@ -240,11 +240,11 @@ function AddProduct({
                         </div>
                     </div>
 
-                    <div className="form-group">
+                    <div className="formGroup">
                         <label>Categories</label>
-                        <div className="category-selection">
+                        <div className="categorySelection">
                             {options.map((opt) => (
-                                <label key={opt.value} className="category-checkbox">
+                                <label key={opt.value} className="categoryCheckbox">
                                     <input
                                         type="checkbox"
                                         value={opt.value}
@@ -263,7 +263,7 @@ function AddProduct({
                         </div>
                     </div>
 
-                    <div className="form-group">
+                    <div className="formGroup">
                         <label htmlFor="description">Description</label>
                         <textarea
                             id="description"
@@ -274,9 +274,9 @@ function AddProduct({
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="formGroup">
                         <label htmlFor="image">Product Image</label>
-                        <div className="image-upload-area">
+                        <div className="imageUploadArea">
                             <input
                                 id="image"
                                 type="file"
@@ -285,7 +285,7 @@ function AddProduct({
                                 onChange={(e) => setImageFile(e.target.files[0])}
                             />
                             {currentImage && !imageFile && (
-                                <div className="current-image-preview">
+                                <div className="currentImagePreview">
                                     <p>Current Image:</p>
                                     <img src={getImageUrl(currentImage)} alt="current" />
                                 </div>
@@ -294,12 +294,12 @@ function AddProduct({
                     </div>
                 </div>
 
-                <div className="form-actions">
-                    <button className="save-btn" type="submit" disabled={saving}>
+                <div className="formActions">
+                    <button className="saveBtn" type="submit" disabled={saving}>
                         {saving ? "Saving..." : editMode ? "Update Product" : "Save Product"}
                     </button>
                     {editMode && (
-                        <button className="cancel-btn" type="button" onClick={handleClose}>
+                        <button className="cancelBtn" type="button" onClick={handleClose}>
                             Cancel
                         </button>
                     )}

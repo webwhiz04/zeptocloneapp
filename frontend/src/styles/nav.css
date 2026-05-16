@@ -1,4 +1,4 @@
-.nav-container {
+.navContainer {
     position: fixed;
     top: 0;
     left: 0;
@@ -19,14 +19,14 @@
     margin: 0;
 }
 
-.leftnav {
+.leftNav {
     display: flex;
     align-items: center;
     gap: 32px;
     flex: 0 0 auto;
 }
 
-.logo-area img {
+.logoArea img {
     height: 32px;
 }
 
@@ -45,13 +45,13 @@
     color: #777;
 }
 
-.centernav {
+.centerNav {
     flex: 1;
     max-width: 600px;
     margin: 0 40px;
 }
 
-.search-wrapper {
+.searchWrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -63,19 +63,19 @@
     transition: all 0.2s ease;
 }
 
-.search-wrapper:focus-within {
+.searchWrapper:focus-within {
     background-color: #fff;
     border-color: #6c2bd9;
     box-shadow: 0 0 0 3px rgba(108, 43, 217, 0.1);
 }
 
-.search-wrapper .icon {
+.searchWrapper .icon {
     color: #6b7280;
     font-size: 20px;
     display: flex;
 }
 
-.searchinput {
+.searchInput {
     width: 100%;
     border: none;
     background: transparent;
@@ -85,14 +85,14 @@
     outline: none;
 }
 
-.rightnav {
+.rightNav {
     display: flex;
     align-items: center;
     gap: 24px;
     flex: 0 0 auto;
 }
 
-.nav-icon-wrap {
+.navIconWrap {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -102,30 +102,30 @@
     transition: color 0.2s;
 }
 
-.nav-icon-wrap svg {
+.navIconWrap svg {
     font-size: 22px;
 }
 
-.nav-icon-wrap span {
+.navIconWrap span {
     font-size: 12px;
     font-weight: 600;
 }
 
-.nav-icon-wrap:hover {
+.navIconWrap:hover {
     color: #6c2bd9;
 }
 
-.user-trigger {
+.userTrigger {
     background: none;
     border: none;
     padding: 0;
 }
 
-.user-area {
+.userArea {
     position: relative;
 }
 
-.user-popup {
+.userPopup {
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
@@ -140,7 +140,7 @@
     z-index: 1200;
 }
 
-.popup-user-name {
+.popupUserName {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -152,8 +152,8 @@
     margin-bottom: 2px;
 }
 
-.popup-orders,
-.popup-info {
+.popupOrders,
+.popupInfo {
     padding: 9px 10px;
     border-radius: 8px;
     color: #374151;
@@ -163,13 +163,13 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.popup-orders:hover,
-.popup-info:hover {
+.popupOrders:hover,
+.popupInfo:hover {
     background: #f3f4f6;
     color: #111827;
 }
 
-.logout-btn {
+.logoutBtn {
     margin-top: 6px;
     border: 0;
     border-radius: 8px;
@@ -181,11 +181,11 @@
     cursor: pointer;
 }
 
-.logout-btn:hover {
+.logoutBtn:hover {
     background: #dc2626;
 }
 
-.category-bar {
+.categoryBar {
     display: flex;
     align-items: center;
     gap: 24px;
@@ -197,11 +197,11 @@
     scrollbar-width: none;
 }
 
-.category-bar::-webkit-scrollbar {
+.categoryBar::-webkit-scrollbar {
     display: none;
 }
 
-.cat-item {
+.catItem {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -215,27 +215,27 @@
     transition: all 0.2s;
 }
 
-.cat-item:hover {
+.catItem:hover {
     background-color: #f3f4f6;
     color: #1a1a1a;
 }
 
-.cat-item.active {
+.catItem.active {
     background-color: #f3f4f6;
     color: #6c2bd9;
     box-shadow: inset 0 -2px 0 #6c2bd9;
     border-radius: 0;
 }
 
-.cat-icon {
+.catIcon {
     font-size: 16px;
 }
 
 @media (max-width: 1024px) {
-    .centernav {
+    .centerNav {
         margin: 0 20px;
     }
-    .leftnav {
+    .leftNav {
         gap: 16px;
     }
 }
@@ -247,12 +247,12 @@
         flex-direction: column;
         gap: 12px;
     }
-    .centernav {
+    .centerNav {
         max-width: 100%;
         margin: 0;
         width: 100%;
     }
-    .rightnav {
+    .rightNav {
         width: 100%;
         justify-content: space-around;
     }

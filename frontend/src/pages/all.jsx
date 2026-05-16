@@ -49,9 +49,9 @@ function AllPage() {
     }, []);
 
     return (
-        <div className="categorypage all-page">
-            <div className="section-header">
-                <h2 className="section-title">All Products</h2>
+        <div className="categorypage allPage">
+            <div className="sectionHeader">
+                <h2 className="sectionTitle">All Products</h2>
             </div>
             <div className="product">
                 {products.map((product) => (

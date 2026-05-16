@@ -55,10 +55,10 @@ function Nav() {
     };
 
     return (
-        <div className="nav-container">
+        <div className="navContainer">
             <header className="navbar">
                 <div className="leftnav">
-                    <Link to="/" className="logo-area">
+                    <Link to="/" className="logoArea">
                         <img
                             src="https://cdn.zeptonow.com/web-static-assets-prod/artifacts/14.12.1/images/header/primary-logo.svg"
                             alt="Zepto logo"
@@ -68,7 +68,7 @@ function Nav() {
                 </div>
 
                 <div className="centernav">
-                    <div className="search-wrapper">
+                    <div className="searchWrapper">
                         <div className="icon"><IoIosSearch /></div>
                         <input type="text" placeholder='Search for "apple juice"' className="searchinput"/>
                     </div>
@@ -76,44 +76,44 @@ function Nav() {
 
                 <div className="rightnav">
                     {loggedIn ? (
-                        <div className="user-area" ref={userAreaRef}>
-                            <button type="button" className="user-trigger" onClick={handleUserIconClick}>
-                                <div className="nav-icon-wrap">
+                        <div className="userArea" ref={userAreaRef}>
+                            <button type="button" className="userTrigger" onClick={handleUserIconClick}>
+                                <div className="navIconWrap">
                                     <FaUserCircle />
                                     <span>Profile</span>
                                 </div>
                             </button>
                             {showUserPopup && (
-                                <div className="user-popup" role="menu" aria-label="User menu">
-                                    <div className="popup-user-name"><FaUserCircle /> {userName}</div>
-                                    <div className="popup-orders" role="menuitem" onClick={() => { navigate("/my-orders"); setShowUserPopup(false); }}>
+                                <div className="userPopup" role="menu" aria-label="User menu">
+                                    <div className="popupUserName"><FaUserCircle /> {userName}</div>
+                                    <div className="popupOrders" role="menuitem" onClick={() => { navigate("/my-orders"); setShowUserPopup(false); }}>
                                         My Orders
                                     </div>
-                                    <div className="popup-info" role="menuitem" onClick={() => { navigate("/profile"); setShowUserPopup(false); }}>
+                                    <div className="popupInfo" role="menuitem" onClick={() => { navigate("/profile"); setShowUserPopup(false); }}>
                                         My Profile
                                     </div>
-                                    <button type="button" className="logout-btn" onClick={handleLogout}>Logout</button>
+                                    <button type="button" className="logoutBtn" onClick={handleLogout}>Logout</button>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <Link to="/login" className="login-link">
-                            <div className="nav-icon-wrap">
+                        <Link to="/login" className="loginLink">
+                            <div className="navIconWrap">
                                 <FaUserCircle />
                                 <span>Login</span>
                             </div>
                         </Link>
                     )}
 
-                    <Link to="/cart" className="cart-link">
-                        <div className="nav-icon-wrap">
+                    <Link to="/cart" className="cartLink">
+                        <div className="navIconWrap">
                             <FaShoppingCart />
                             <span>Cart</span>
                         </div>
                     </Link>
 
-                    <Link to="/admin" className="admin-link">
-                        <div className="nav-icon-wrap">
+                    <Link to="/admin" className="adminLink">
+                        <div className="navIconWrap">
                             <RiAdminFill />
                             <span>Admin</span>
                         </div>
@@ -121,16 +121,16 @@ function Nav() {
                 </div>
             </header>
 
-            <nav className="category-bar">
-                <Link to="/all" className="cat-item active"><BsBagHeart className="cat-icon" /> All</Link>
-                <Link to="/cafe" className="cat-item"><SiBuymeacoffee className="cat-icon" /> Cafe</Link>
-                <Link to="/home" className="cat-item"><FaHome className="cat-icon" /> Home</Link>
-                <Link to="/toys" className="cat-item"><TbHorseToy className="cat-icon" /> Toys</Link>
-                <Link to="/fresh" className="cat-item"><SiCodefresh className="cat-icon" /> Fresh</Link>
-                <Link to="/electronics" className="cat-item"><FaHeadphonesAlt className="cat-icon" /> Electronics</Link>
-                <Link to="/mobile" className="cat-item"><CiMobile3 className="cat-icon" /> Mobiles</Link>
-                <Link to="/beauty" className="cat-item"><FaWandMagicSparkles className="cat-icon" /> Beauty</Link>
-                <Link to="/fashion" className="cat-item"><GiLargeDress className="cat-icon" /> Fashion</Link>
+            <nav className="categoryBar">
+                <Link to="/all" className="catItem active"><BsBagHeart className="catIcon" /> All</Link>
+                <Link to="/cafe" className="catItem"><SiBuymeacoffee className="catIcon" /> Cafe</Link>
+                <Link to="/home" className="catItem"><FaHome className="catIcon" /> Home</Link>
+                <Link to="/toys" className="catItem"><TbHorseToy className="catIcon" /> Toys</Link>
+                <Link to="/fresh" className="catItem"><SiCodefresh className="catIcon" /> Fresh</Link>
+                <Link to="/electronics" className="catItem"><FaHeadphonesAlt className="catIcon" /> Electronics</Link>
+                <Link to="/mobile" className="catItem"><CiMobile3 className="catIcon" /> Mobiles</Link>
+                <Link to="/beauty" className="catItem"><FaWandMagicSparkles className="catIcon" /> Beauty</Link>
+                <Link to="/fashion" className="catItem"><GiLargeDress className="catIcon" /> Fashion</Link>
             </nav>
         </div>
     );

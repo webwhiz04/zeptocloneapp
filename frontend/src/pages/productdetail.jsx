@@ -13,7 +13,7 @@ const getDiscountPercent = (price) => {
     const numericPrice = Number(price || 0);
     if (numericPrice <= 0) return 0;
 
-    // Display a simple discount indicator when no MRP is available.
+    
     return 12;
 };
 
@@ -92,18 +92,18 @@ function ProductDetailPage() {
 
     if (loading) {
         return (
-            <div className="product-detail-page-wrapper">
-                <div className="product-detail-status">Loading product details...</div>
+            <div className="productDetailPageWrapper">
+                <div className="productDetailStatus">Loading product details...</div>
             </div>
         );
     }
 
     if (error || !product) {
         return (
-            <div className="product-detail-page-wrapper">
-                <div className="product-detail-status error">
+            <div className="productDetailPageWrapper">
+                <div className="productDetailStatus error">
                     <p>{error || "Product not found"}</p>
-                    <button type="button" className="product-detail-back" onClick={() => navigate(-1)}>
+                    <button type="button" className="productDetailBack" onClick={() => navigate(-1)}>
                         Go Back
                     </button>
                 </div>
@@ -112,11 +112,11 @@ function ProductDetailPage() {
     }
 
     return (
-        <div className="product-detail-page-wrapper">
-            <div className="product-page">
+        <div className="productDetailPageWrapper">
+            <div className="productPage">
                 <div className="left">
                     <img
-                        className="product-main-image"
+                        className="productMainImage"
                         src={activeImage}
                         alt={product.name || "product"}
                         onError={(event) => {
@@ -124,7 +124,7 @@ function ProductDetailPage() {
                         }}
                     />
 
-                    <div className="product-thumbnails">
+                    <div className="productThumbnails">
                         {imageList.map((image) => (
                             <button
                                 key={image}
@@ -137,37 +137,37 @@ function ProductDetailPage() {
                         ))}
                     </div>
 
-                    <button type="button" className="product-add-to-cart" onClick={() => handleAdd(product)}>
+                    <button type="button" className="productAddToCart" onClick={() => handleAdd(product)}>
                         Add to Cart
                     </button>
                 </div>
 
                 <div className="right">
-                    <div className="product-detail-header">
+                    <div className="productDetailHeader">
                         <h1>{product.name || "Untitled Product"}</h1>
-                        <p className="product-categories">
+                        <p className="productCategories">
                             {(Array.isArray(product.categories) && product.categories.length > 0)
                                 ? product.categories.join(" • ")
                                 : "General"}
                         </p>
                     </div>
 
-                    <section className="product-price-block">
-                        <p className="sale-price">₹{numericPrice.toFixed(2)}</p>
+                    <section className="productPriceBlock">
+                        <p className="salePrice">₹{numericPrice.toFixed(2)}</p>
                         {originalPrice > 0 && (
-                            <p className="mrp-row">
+                            <p className="mrpRow">
                                 <span className="mrp">₹{originalPrice.toFixed(2)}</span>
                                 <span className="discount">{discountPercent}% OFF</span>
                             </p>
                         )}
                     </section>
 
-                    <section className="product-rating-block">
+                    <section className="productRatingBlock">
                         <h3>Ratings</h3>
                         <p>4.2 ★ average rating from verified buyers</p>
                     </section>
 
-                    <section className="product-offers-block">
+                    <section className="productOffersBlock">
                         <h3>Offers & Coupons</h3>
                         <ul>
                             <li>10% instant discount on selected bank cards</li>
@@ -176,7 +176,7 @@ function ProductDetailPage() {
                         </ul>
                     </section>
 
-                    <section className="product-description-block">
+                    <section className="productDescriptionBlock">
                         <h3>Description</h3>
                         <p>{product.description?.trim() || "No description available"}</p>
                         <p>Quantity available: {product.quantity || "NA"}</p>

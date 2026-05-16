@@ -1,8 +1,8 @@
-.view-product-container {
+.viewProductContainer {
     width: 100%;
 }
 
-.view-table-section {
+.viewTableSection {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -20,7 +20,7 @@
     margin: 0;
 }
 
-.product-count {
+.productCount {
     background-color: #f3e5f5;
     color: #3e0075;
     padding: 6px 12px;
@@ -29,20 +29,20 @@
     font-weight: 600;
 }
 
-.product-table-card {
+.productTableCard {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     overflow: hidden;
 }
 
-.admin-product-table {
+.adminProductTable {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
 }
 
-.admin-product-table th {
+.adminProductTable th {
     background-color: #f8f9fa;
     padding: 15px 20px;
     font-size: 14px;
@@ -51,13 +51,13 @@
     border-bottom: 1px solid #eee;
 }
 
-.admin-product-table td {
+.adminProductTable td {
     padding: 15px 20px;
     border-bottom: 1px solid #f5f5f5;
     vertical-align: middle;
 }
 
-.table-img {
+.tableImg {
     width: 45px;
     height: 45px;
     border-radius: 8px;
@@ -65,7 +65,7 @@
     border: 1px solid #eee;
 }
 
-.product-name {
+.productName {
     font-weight: 600;
     color: #333;
     display: block;
@@ -75,12 +75,12 @@
     white-space: nowrap;
 }
 
-.price-cell {
+.priceCell {
     font-weight: 600;
     color: #3e0075;
 }
 
-.category-tag {
+.categoryTag {
     display: inline-block;
     background-color: #f1f1f1;
     color: #666;
@@ -91,24 +91,24 @@
     text-transform: capitalize;
 }
 
-.stock-status {
+.stockStatus {
     font-weight: 600;
     font-size: 13px;
     padding: 4px 8px;
     border-radius: 4px;
 }
 
-.in-stock {
+.inStock {
     background-color: #e8f5e9;
     color: #43a047;
 }
 
-.out-of-stock {
+.outOfStock {
     background-color: #ffebee;
     color: #e53935;
 }
 
-.product-description {
+.productDescription {
     font-size: 13px;
     color: #777;
     display: -webkit-box;
@@ -118,12 +118,12 @@
     max-width: 250px;
 }
 
-.action-buttons {
+.actionButtons {
     display: flex;
     gap: 10px;
 }
 
-.edit-btn, .remove-btn {
+.editBtn, .removeBtn {
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 13px;
@@ -133,21 +133,21 @@
     transition: background-color 0.2s;
 }
 
-.edit-btn {
+.editBtn {
     background-color: #e3f2fd;
     color: #1e88e5;
 }
 
-.edit-btn:hover {
+.editBtn:hover {
     background-color: #bbdefb;
 }
 
-.remove-btn {
+.removeBtn {
     background-color: #ffebee;
     color: #e53935;
 }
 
-.remove-btn:hover {
+.removeBtn:hover {
     background-color: #ffcdd2;
 }
 

@@ -1,4 +1,4 @@
-.zepto-banners-container {
+.zeptoBannersContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
@@ -8,7 +8,7 @@
     margin: 0;
 }
 
-.zepto-banner {
+.zeptoBanner {
     width: 100%;
     border-radius: 16px;
     overflow: hidden;
@@ -16,11 +16,11 @@
     transition: transform 0.2s ease;
 }
 
-.zepto-banner:hover {
+.zeptoBanner:hover {
     transform: scale(1.01);
 }
 
-.zepto-banner img {
+.zeptoBanner img {
     width: 100%;
     height: auto;
     display: block;
@@ -28,7 +28,7 @@
 }
 
 @media (max-width: 768px) {
-    .zepto-banners-container {
+    .zeptoBannersContainer {
         grid-template-columns: 1fr;
         padding: 10px;
     }

@@ -439,7 +439,7 @@ button.remove {
 }
 
 @media (max-width: 768px) {
-    .cart-overlay-panel {
+    .cartOverlayPanel {
         width: 86vw;
         min-width: 0;
     }

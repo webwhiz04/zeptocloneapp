@@ -1,4 +1,4 @@
-.admin-layout {
+.adminLayout {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -7,13 +7,13 @@
     background-color: #f8f9fa;
 }
 
-.admin-container {
+.adminContainer {
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
-.admin-sidebar {
+.adminSidebar {
     width: 260px;
     background-color: #3e0075;
     color: #ffffff;
@@ -21,37 +21,37 @@
     flex-direction: column;
 }
 
-.admin-sidebar-header {
+.adminSidebarHeader {
     padding: 25px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 10px;
 }
 
-.admin-logo-link {
+.adminLogoLink {
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.admin-zepto-logo {
+.adminZeptoLogo {
     height: 30px;
     width: auto;
-    filter: brightness(0) invert(1); /* Makes the logo white for the dark sidebar */
+    filter: brightness(0) invert(1); 
 }
 
-.logo-text-admin {
+.logoTextAdmin {
     color: #ff3366;
     font-size: 24px;
     font-weight: 600;
 }
 
-.admin-nav {
+.adminNav {
     display: flex;
     flex-direction: column;
 }
 
-.admin-nav-item {
+.adminNavItem {
     display: flex;
     align-items: center;
     padding: 15px 25px;
@@ -62,23 +62,23 @@
     font-weight: 500;
 }
 
-.admin-nav-item:hover {
+.adminNavItem:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.admin-nav-item.active {
+.adminNavItem.active {
     background-color: rgba(255, 255, 255, 0.2);
     border-left: 4px solid #ffffff;
 }
 
-.admin-nav-icon {
+.adminNavIcon {
     margin-right: 15px;
     font-size: 18px;
     display: flex;
     align-items: center;
 }
 
-.admin-main {
+.adminMain {
     flex: 1;
     padding: 30px;
     overflow-y: auto;
@@ -86,17 +86,17 @@
 }
 
 @media (max-width: 768px) {
-    .admin-sidebar {
+    .adminSidebar {
         width: 70px;
     }
-    .admin-nav-label {
+    .adminNavLabel {
         display: none;
     }
-    .admin-nav-icon {
+    .adminNavIcon {
         margin-right: 0;
         font-size: 20px;
     }
-    .admin-nav-item {
+    .adminNavItem {
         justify-content: center;
         padding: 15px;
     }
