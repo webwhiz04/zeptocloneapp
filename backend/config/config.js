@@ -10,6 +10,7 @@ const config = {
     SMTP_HOST: process.env.SMTP_HOST || "smtp-relay.brevo.com",
     SMTP_PORT: Number(process.env.SMTP_PORT || 587),
     SMTP_SECURE: String(process.env.SMTP_SECURE || "false").toLowerCase() === "true",
+    BREVO_API_KEY: process.env.BREVO_API_KEY || "",
     RESEND_API_KEY: process.env.RESEND_API_KEY || "",
     // Use EMAIL_FROM from env, or fall back to EMAIL_USER
     EMAIL_FROM: process.env.EMAIL_FROM || process.env.EMAIL_USER || "zeptoecommerce@gmail.com",

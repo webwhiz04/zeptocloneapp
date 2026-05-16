@@ -3,7 +3,9 @@ import config from "../config/config.js";
 
 const isProduction = config.NODE_ENV === "production";
 const RESEND_API_URL = "https://api.resend.com/emails";
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
+const hasBrevoApiConfig = () => Boolean(config.BREVO_API_KEY?.trim() && config.EMAIL_FROM?.trim());
 const hasResendConfig = () => Boolean(config.RESEND_API_KEY?.trim() && config.EMAIL_FROM?.trim());
 
 export const getSanitizedEmailFrom = () => config.EMAIL_FROM?.trim() || config.EMAIL_USER?.trim();
@@ -18,8 +20,13 @@ export const getMailConfigError = () => {
     return "EMAIL_FROM is required when using RESEND_API_KEY";
   }
 
-  if (!resendKey && (!user || !pass)) {
-    return "Missing mail configuration. Set RESEND_API_KEY + EMAIL_FROM, or EMAIL_USER + EMAIL_PASS";
+  const brevoKey = config.BREVO_API_KEY?.trim();
+  if (brevoKey && !from) {
+    return "EMAIL_FROM is required when using BREVO_API_KEY";
+  }
+
+  if (!brevoKey && !resendKey && (!user || !pass)) {
+    return "Missing mail configuration. Set BREVO_API_KEY + EMAIL_FROM, RESEND_API_KEY + EMAIL_FROM, or EMAIL_USER + EMAIL_PASS";
   }
 
   return null;
@@ -45,7 +52,7 @@ export const getMailSendErrorMessage = (error) => {
   }
 
   if (message.includes("timeout") || message.includes("etimedout") || message.includes("socket hang up")) {
-    return "SMTP connection timed out. On deployment, prefer RESEND_API_KEY over raw SMTP, or try SMTP_PORT=465 with SMTP_SECURE=true for Brevo.";
+    return "SMTP connection timed out. On deployment, prefer BREVO_API_KEY or RESEND_API_KEY over raw SMTP, or try SMTP_PORT=465 with SMTP_SECURE=true for Brevo.";
   }
 
   if (error?.message) {
@@ -174,6 +181,52 @@ const normalizeResendAttachments = (attachments = []) =>
     content_type: attachment.contentType,
   }));
 
+const normalizeBrevoAttachments = (attachments = []) =>
+  normalizeAttachments(attachments).map((attachment) => ({
+    name: attachment.filename,
+    content: attachment.content.toString("base64"),
+  }));
+
+const toBrevoRecipients = (to) =>
+  (Array.isArray(to) ? to : [to]).filter(Boolean).map((email) => ({ email }));
+
+const sendWithBrevoApi = async ({ to, subject, text, html, replyTo, attachments = [] }) => {
+  const response = await fetch(BREVO_API_URL, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "api-key": config.BREVO_API_KEY?.trim(),
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: {
+        email: getSanitizedEmailFrom(),
+        name: "Zepto Admin",
+      },
+      to: toBrevoRecipients(to),
+      replyTo: replyTo ? { email: replyTo } : undefined,
+      subject,
+      textContent: text,
+      htmlContent: html,
+      attachment: attachments.length ? normalizeBrevoAttachments(attachments) : undefined,
+    }),
+  });
+
+  const body = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const apiError = body?.message || body?.error || `Brevo API error ${response.status}`;
+    const error = new Error(apiError);
+    error.code = "EBREVO";
+    throw error;
+  }
+
+  return {
+    messageId: body?.messageId || body?.messageId || body?.message_id,
+    provider: "brevo-api",
+  };
+};
+
 const sendWithResend = async ({ to, subject, text, html, replyTo, attachments = [] }) => {
   const payload = {
     from: formatFromAddress(),
@@ -225,10 +278,13 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
   }
 
   try {
+    const useBrevoApi = hasBrevoApiConfig();
     const useResend = hasResendConfig();
     let info;
 
-    if (useResend) {
+    if (useBrevoApi) {
+      info = await sendWithBrevoApi({ to, subject, text, html, replyTo, attachments });
+    } else if (useResend) {
       info = await sendWithResend({ to, subject, text, html, replyTo, attachments });
     } else {
       info = await sendWithSmtpFallback({ to, subject, text, html, replyTo, attachments });
