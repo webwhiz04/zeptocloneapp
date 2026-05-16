@@ -338,3 +338,84 @@ export const sendOtpEmail = async (email, otp) => {
 
   return result;
 };
+
+export const sendOrderShippedEmail = async (email, order) => {
+  const orderKey = order?.paymentDetails?.orderId || "Order";
+  const result = await sendMail({
+    to: email,
+    subject: "Your Order Has Been Shipped! 📦",
+    text: `Your order ${orderKey} has been shipped and is on its way to you.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #3e0075; text-align: center;">Your Order Is Shipped! 📦</h2>
+        <p>Hello,</p>
+        <p>Great news! Your order has been shipped and is on its way to you.</p>
+        <div style="background-color: #f3f3f3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Order ID:</strong> ${orderKey}</p>
+          <p><strong>Order Amount:</strong> ₹${order?.totalAmount || 0}</p>
+          <p><strong>Status:</strong> <span style="color: #ff9800; font-weight: bold;">Shipped</span></p>
+        </div>
+        <p>You can track your order on our website using your order ID.</p>
+        <p style="color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">
+          Thank you for shopping with Zepto!
+        </p>
+      </div>
+    `,
+    replyTo: getSanitizedEmailFrom(),
+  });
+  return result;
+};
+
+export const sendOrderOutForDeliveryEmail = async (email, order) => {
+  const orderKey = order?.paymentDetails?.orderId || "Order";
+  const result = await sendMail({
+    to: email,
+    subject: "Your Order Is Out For Delivery! 🚚",
+    text: `Your order ${orderKey} is out for delivery today.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #3e0075; text-align: center;">Your Order Is Out For Delivery! 🚚</h2>
+        <p>Hello,</p>
+        <p>Exciting news! Your order is out for delivery and should arrive today.</p>
+        <div style="background-color: #f3f3f3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Order ID:</strong> ${orderKey}</p>
+          <p><strong>Order Amount:</strong> ₹${order?.totalAmount || 0}</p>
+          <p><strong>Status:</strong> <span style="color: #ff9800; font-weight: bold;">Out for Delivery</span></p>
+        </div>
+        <p>Please make sure someone is available to receive the package. If you're not home, the delivery partner will leave a notice.</p>
+        <p style="color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">
+          Thank you for shopping with Zepto!
+        </p>
+      </div>
+    `,
+    replyTo: getSanitizedEmailFrom(),
+  });
+  return result;
+};
+
+export const sendOrderDeliveredEmail = async (email, order) => {
+  const orderKey = order?.paymentDetails?.orderId || "Order";
+  const result = await sendMail({
+    to: email,
+    subject: "Your Order Has Been Delivered! ✅",
+    text: `Your order ${orderKey} has been successfully delivered.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #3e0075; text-align: center;">Your Order Has Been Delivered! ✅</h2>
+        <p>Hello,</p>
+        <p>Your order has been successfully delivered! We hope you enjoy your purchase.</p>
+        <div style="background-color: #f3f3f3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Order ID:</strong> ${orderKey}</p>
+          <p><strong>Order Amount:</strong> ₹${order?.totalAmount || 0}</p>
+          <p><strong>Status:</strong> <span style="color: #4caf50; font-weight: bold;">Delivered</span></p>
+        </div>
+        <p>If you have any issues with your order, please don't hesitate to contact us.</p>
+        <p style="color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">
+          Thank you for shopping with Zepto! We'd love to have you back soon.
+        </p>
+      </div>
+    `,
+    replyTo: getSanitizedEmailFrom(),
+  });
+  return result;
+};
