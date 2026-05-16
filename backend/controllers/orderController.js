@@ -7,7 +7,13 @@ import {
   getOrderKey,
 } from "../utils/orderUtils.js";
 import { getUserByEmail, upsertShippingAddress } from "./userController.js";
-import { sendMail, getMailConfigError } from "../utils/mailer.js";
+import {
+  sendMail,
+  getMailConfigError,
+  sendOrderShippedEmail,
+  sendOrderOutForDeliveryEmail,
+  sendOrderDeliveredEmail,
+} from "../utils/mailer.js";
 import { getRazorpayCredentials, createRazorpayOrder } from "../utils/razorpayUtils.js";
 import { generateInvoicePdf } from "../utils/pdfGenerator.js";
 import crypto from "crypto";
@@ -325,8 +331,14 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    const order = user.orders[orderIndex];
+    const oldStatus = order.status;
     user.orders[orderIndex].status = normalizedStatus;
     await user.save();
+
+    await sendStatusUpdateEmail(normalizedEmail, order, normalizedStatus).catch((err) =>
+      console.error("Status update email error:", err)
+    );
 
     return res.status(200).json({
       message: "Order status updated",
@@ -335,5 +347,27 @@ export const updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error("Update Admin Order Status Error:", error);
     return res.status(500).json({ message: "Server error while updating order status" });
+  }
+};
+
+const sendStatusUpdateEmail = async (email, order, newStatus) => {
+  const mailConfigError = getMailConfigError();
+  if (mailConfigError) {
+    console.warn(`Status update mail skipped for ${email}: ${mailConfigError}`);
+    return;
+  }
+
+  const status = String(newStatus).trim().toLowerCase();
+
+  if (status.includes("shipped")) {
+    return await sendOrderShippedEmail(email, order);
+  }
+
+  if (status.includes("out for delivery") || status.includes("out-for-delivery")) {
+    return await sendOrderOutForDeliveryEmail(email, order);
+  }
+
+  if (status.includes("delivered")) {
+    return await sendOrderDeliveredEmail(email, order);
   }
 };
