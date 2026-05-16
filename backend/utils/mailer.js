@@ -5,7 +5,6 @@ const isProduction = config.NODE_ENV === "production";
 const RESEND_API_URL = "https://api.resend.com/emails";
 
 const hasResendConfig = () => Boolean(config.RESEND_API_KEY?.trim() && config.EMAIL_FROM?.trim());
-const hasSmtpConfig = () => Boolean(config.EMAIL_USER?.trim() && config.EMAIL_PASS?.trim());
 
 export const getSanitizedEmailFrom = () => config.EMAIL_FROM?.trim() || config.EMAIL_USER?.trim();
 
@@ -45,6 +44,10 @@ export const getMailSendErrorMessage = (error) => {
     return "Invalid email payload. Check EMAIL_FROM, recipient address, and message fields.";
   }
 
+  if (message.includes("timeout") || message.includes("etimedout") || message.includes("socket hang up")) {
+    return "SMTP connection timed out. On deployment, prefer RESEND_API_KEY over raw SMTP, or try SMTP_PORT=465 with SMTP_SECURE=true for Brevo.";
+  }
+
   if (error?.message) {
     return `Email error: ${error.message}`;
   }
@@ -52,18 +55,16 @@ export const getMailSendErrorMessage = (error) => {
   return "Server error while sending email";
 };
 
-const createTransporter = () => {
+const createTransporter = ({ port = config.SMTP_PORT || 587, secure = Boolean(config.SMTP_SECURE) } = {}) => {
   const user = config.EMAIL_USER?.trim();
   const pass = config.EMAIL_PASS?.trim();
 
   if (!user || !pass) return null;
 
-  const port = Number(config.SMTP_PORT || 587);
-
   const transporter = nodemailer.createTransport({
     host: config.SMTP_HOST || "smtp-relay.brevo.com",
-    port,
-    secure: Boolean(config.SMTP_SECURE),
+    port: Number(port),
+    secure,
     auth: { user, pass },
     family: 4,
     connectionTimeout: 30000,
@@ -73,6 +74,63 @@ const createTransporter = () => {
   });
 
   return transporter;
+};
+
+const sendWithSmtpFallback = async ({ to, subject, text, html, replyTo, attachments = [] }) => {
+  const candidates = [
+    {
+      port: Number(config.SMTP_PORT || 587),
+      secure: Boolean(config.SMTP_SECURE),
+    },
+    {
+      port: 465,
+      secure: true,
+    },
+    {
+      port: 587,
+      secure: false,
+    },
+  ];
+
+  const tried = [];
+
+  for (const candidate of candidates) {
+    const signature = `${candidate.port}/${candidate.secure ? "secure" : "starttls"}`;
+    if (tried.includes(signature)) continue;
+    tried.push(signature);
+
+    const transporter = createTransporter(candidate);
+    if (!transporter) {
+      continue;
+    }
+
+    try {
+      const fromAddress = formatFromAddress();
+      const info = await transporter.sendMail({
+        from: fromAddress,
+        to,
+        subject,
+        text,
+        html,
+        replyTo: replyTo || getSanitizedEmailFrom(),
+        attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
+      });
+
+      return { ...info, provider: `smtp:${candidate.port}` };
+    } catch (error) {
+      const message = String(error?.message || "").toLowerCase();
+      const isTimeout = message.includes("timeout") || message.includes("etimedout") || message.includes("socket hang up");
+      const isConnect = message.includes("connect") || message.includes("tls") || error?.code === "ECONNECTION";
+
+      if (!isTimeout && !isConnect) {
+        throw error;
+      }
+
+      console.warn(`SMTP attempt failed on port ${candidate.port}: ${error.message}`);
+    }
+  }
+
+  throw new Error("SMTP connection timed out on all configured ports");
 };
 
 const formatFromAddress = () => {
@@ -173,21 +231,7 @@ export const sendMail = async ({ to, subject, text, html, replyTo, attachments =
     if (useResend) {
       info = await sendWithResend({ to, subject, text, html, replyTo, attachments });
     } else {
-      const transporter = createTransporter();
-      if (!transporter) {
-        return { success: false, message: "Email transporter configuration is invalid" };
-      }
-
-      const fromAddress = formatFromAddress();
-      info = await transporter.sendMail({
-        from: fromAddress,
-        to,
-        subject,
-        text,
-        html,
-        replyTo: replyTo || getSanitizedEmailFrom(),
-        attachments: attachments.length ? normalizeAttachments(attachments) : undefined,
-      });
+      info = await sendWithSmtpFallback({ to, subject, text, html, replyTo, attachments });
     }
 
     console.log(`Email sent to [${to}]. Provider: ${info.provider || "smtp"}. MessageId: ${info.messageId}`);
