@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Nav from "./components/nav.jsx";
-import Footer from "./components/Footer.jsx";
 import Login from "./pages/login.jsx";
 import Otp from "./pages/otp.jsx";
 import AllPage from "./pages/all.jsx";
@@ -126,7 +125,6 @@ function App() {
       <div className={`cart-toast ${toastMessage ? "show" : ""}`} aria-live="polite" aria-atomic="true">
         {toastMessage}
       </div>
-      <Footer />
     </>
   );
 }
