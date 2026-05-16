@@ -1,0 +1,264 @@
+.manageUsersContainer {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+.manageUsersHeader {
+    margin-bottom: 2rem;
+}
+
+.manageUsersHeader h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.manageUsersContent {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.usersSearchBox {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.usersSearchInput {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+}
+
+.usersSearchInput:focus {
+    outline: none;
+    border-color: #10a37f;
+    box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+}
+
+.usersCount {
+    font-weight: 600;
+    color: #10a37f;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.usersLoading,
+.usersError,
+.usersEmpty {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1rem;
+    color: #666;
+}
+
+.usersError {
+    color: #d32f2f;
+    background-color: #ffebee;
+}
+
+.usersTable {
+    overflow-x: auto;
+}
+
+.usersTable table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.usersTable thead {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.usersTable th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.usersTable tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.usersTable tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.usersTable tbody tr.bannedUser {
+    background-color: #fff3e0;
+    opacity: 0.8;
+}
+
+.usersTable td {
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.userEmail {
+    font-weight: 500;
+    color: #333;
+}
+
+.userStatus {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.userStatus.active {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+}
+
+.userStatus.banned {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
+
+.userActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.actionBtn.ban {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.actionBtn.ban:hover {
+    background-color: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.actionBtn.unban {
+    background-color: #51cf66;
+    color: white;
+}
+
+.actionBtn.unban:hover {
+    background-color: #40c057;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(81, 207, 102, 0.3);
+}
+
+.actionBtn svg {
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .manageUsersContainer {
+        padding: 1rem;
+    }
+
+    .manageUsersHeader h1 {
+        font-size: 1.8rem;
+    }
+
+    .usersSearchBox {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .usersSearchInput {
+        min-width: 100%;
+    }
+
+    .usersCount {
+        text-align: center;
+    }
+
+    .usersTable {
+        font-size: 0.85rem;
+    }
+
+    .usersTable th,
+    .usersTable td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .actionBtn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .userName,
+    .userPhone {
+        display: none;
+    }
+
+    .usersTable thead tr {
+        display: none;
+    }
+
+    .usersTable tbody,
+    .usersTable tr,
+    .usersTable td {
+        display: block;
+        width: 100%;
+    }
+
+    .usersTable tr {
+        margin-bottom: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .usersTable td {
+        text-align: right;
+        padding-right: 1rem;
+        position: relative;
+        padding-left: 50%;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .usersTable td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1rem;
+        font-weight: 600;
+        color: #10a37f;
+        width: 45%;
+        text-align: left;
+    }
+
+    .usersTable td:last-child {
+        text-align: center;
+        padding-right: 0;
+    }
+}

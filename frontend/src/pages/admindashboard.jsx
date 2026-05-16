@@ -103,8 +103,9 @@ function AdminDashboard() {
 
         fetchStats();
     }, []);
-
-    const chartData = getLineChartPoints(stats.revenueTrend, 560, 260, 42);
+ 
+    const displayedTrend = Array.isArray(stats.revenueTrend) ? stats.revenueTrend.slice(-7) : [];
+    const chartData = getLineChartPoints(displayedTrend, 560, 260, 42);
     const linePath = chartData.points
         .map((point, index) => `${index === 0 ? "M" : "L"}${point.x},${point.y}`)
         .join(" ");
@@ -167,7 +168,7 @@ function AdminDashboard() {
 
             <div className="adminChartsSection">
                 <div className="chartContainer revenueTrend">
-                    <h3>Revenue Trend (Last 1 Month)</h3>
+                    <h3>Revenue Trend (Last 1 Week)</h3>
                     <div className="placeholderChart">
                         <div className="lineChartWrap">
                             <div className="chartYLabel">Y Axis: Revenue (INR)</div>

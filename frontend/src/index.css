@@ -9,7 +9,7 @@ body {
     padding-top: 130px; 
 }
 
-body.adminMode {
+body.adminmode {
     padding-top: 0;
 }
 
@@ -18,7 +18,7 @@ body.adminMode {
         padding-top: 200px;
     }
 
-	body.adminMode {
+	body.adminmode {
 		padding-top: 0;
 	}
 }

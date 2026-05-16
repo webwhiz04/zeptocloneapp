@@ -128,6 +128,10 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 });
 
 export default mongoose.model("User", userSchema);

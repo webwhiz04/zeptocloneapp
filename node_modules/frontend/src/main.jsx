@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/admindashboard.jsx";
 import AddProduct from "./pages/addproduct.jsx";
 import ViewProduct from "./pages/viewproduct.jsx";
 import AdminUserOrders from "./pages/adminuserorders.jsx";
+import ManageUsers from "./pages/manageusers.jsx";
 import AdminLayout from "./components/AdminLayout.jsx";
 
 const AdminWrapper = ({ children }) => (
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/admindashboard/addproduct" element={<AdminWrapper><AddProduct /></AdminWrapper>} />
             <Route path="/admindashboard/viewproduct" element={<AdminWrapper><ViewProduct /></AdminWrapper>} />
             <Route path="/admindashboard/user" element={<AdminWrapper><AdminUserOrders /></AdminWrapper>} />
+            <Route path="/admindashboard/manage-users" element={<AdminWrapper><ManageUsers /></AdminWrapper>} />
         </Routes>
     </BrowserRouter>
 );

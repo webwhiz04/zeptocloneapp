@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/categoryproducts.css";
 import useCart from "../hooks/useCart.js";
 import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
+import Footer from "../components/Footer.jsx";
 
 import API_BASE_URL from "../services/api";
 
@@ -19,11 +20,29 @@ function AllPage() {
     const [loading, setLoading] = useState(true);
     const { handleAdd } = useCart();
     const navigate = useNavigate();
+    const location = useLocation();
+    const searchQuery = new URLSearchParams(location.search).get("search")?.trim().toLowerCase() || "";
 
     const openProduct = (id) => {
         if (!id) return;
         navigate(`/product/${id}`);
     };
+
+    const filteredProducts = searchQuery
+        ? products.filter((product) => {
+            const searchableText = [
+                product.name,
+                product.description,
+                product.quantity,
+                Array.isArray(product.categories) ? product.categories.join(" ") : "",
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+            return searchableText.includes(searchQuery);
+        })
+        : products;
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -48,66 +67,87 @@ function AllPage() {
         fetchProducts();
     }, []);
 
+    if (loading) {
+        return (
+            <div className="categorypage allPage">
+                <div className="sectionHeader">
+                    <h2 className="sectionTitle">All Products</h2>
+                </div>
+                <div className="product" style={{ textAlign: "center", padding: "50px" }}>
+                    <h2>Loading products...</h2>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
     return (
         <div className="categorypage allPage">
             <div className="sectionHeader">
-                <h2 className="sectionTitle">All Products</h2>
+                <h2 className="sectionTitle">{searchQuery ? `Search results for "${searchQuery}"` : "All Products"}</h2>
             </div>
             <div className="product">
-                {products.map((product) => (
-                    <div
-                        key={product._id}
-                        className="productcard"
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => openProduct(product._id)}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter" || event.key === " ") {
-                                event.preventDefault();
-                                openProduct(product._id);
-                            }
-                        }}
-                    >
-                        <div className="productimages">
-                            <img
-                                className="productimage"
-                                src={getImageUrl(product.image)}
-                                alt={product.name}
-                                onError={(event) => {
-                                    event.currentTarget.src = getPlaceholderUrl(300, 220);
-                                }}
-                            />
-                            <button
-                                className="add"
-                                type="button"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    handleAdd(product);
-                                }}
-                            >
-                                Add
-                            </button>
-                        </div>
-                        <div className="productcontent">
-                            <h2 className="productname">{product.name}</h2>
-                            <p className="productdescription">
-                                {product.description?.trim() || "No description available"}
-                            </p>
-                            <div className="productprice">
-                                <p className="quantity">
-                                    Qty: {product.quantity ? product.quantity : "NA"}
-                                </p>
-                                <p className="ratings">Rating: {getRatingLabel(product)}</p>
-                            </div>
-                            <button className="price" type="button">
-                                ₹{Number(product.price || 0).toFixed(2)}
-                            </button>
-                        </div>
+                {filteredProducts.length === 0 ? (
+                    <div style={{ textAlign: "center", width: "100%", padding: "50px" }}>
+                        <h2>{searchQuery ? `No products found for "${searchQuery}".` : "No products found."}</h2>
                     </div>
-                ))}
+                ) : (
+                    filteredProducts.map((product) => (
+                        <div
+                            key={product._id}
+                            className="productcard"
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => openProduct(product._id)}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    openProduct(product._id);
+                                }
+                            }}
+                        >
+                            <div className="productimages">
+                                <img
+                                    className="productimage"
+                                    src={getImageUrl(product.image)}
+                                    alt={product.name}
+                                    onError={(event) => {
+                                        event.currentTarget.src = getPlaceholderUrl(300, 220);
+                                    }}
+                                />
+                                <button
+                                    className="add"
+                                    type="button"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        handleAdd(product);
+                                    }}
+                                >
+                                    Add
+                                </button>
+                            </div>
+                            <div className="productcontent">
+                                <h2 className="productname">{product.name}</h2>
+                                <p className="productdescription">
+                                    {product.description?.trim() || "No description available"}
+                                </p>
+                                <div className="productprice">
+                                    <p className="quantity">
+                                        Qty: {product.quantity ? product.quantity : "NA"}
+                                    </p>
+                                    <p className="ratings">Rating: {getRatingLabel(product)}</p>
+                                </div>
+                                <button className="price" type="button">
+                                    ₹{Number(product.price || 0).toFixed(2)}
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
+            <Footer />
         </div>
     );
-}
+};
 
 export default AllPage;

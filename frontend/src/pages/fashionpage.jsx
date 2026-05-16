@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/categoryproducts.css";
 import useCart from "../hooks/useCart.js";
 import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
+import Footer from "../components/Footer.jsx";
 
 import API_BASE_URL from "../services/api";
 
@@ -104,6 +105,7 @@ function FashionPage() {
                     </div>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 }

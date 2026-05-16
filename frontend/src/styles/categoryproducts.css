@@ -1,10 +1,12 @@
 .categorypage {
-    
     padding: calc(5px + 16px) 16px 24px 16px;
     width: 100%;
     max-width: none;
     margin: 0;
     background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 64px;
 }
 
 .allPage {
@@ -32,6 +34,10 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 20px;
+}
+
+.categorypage .footer {
+    margin-top: 48px;
 }
 
 .productcard {

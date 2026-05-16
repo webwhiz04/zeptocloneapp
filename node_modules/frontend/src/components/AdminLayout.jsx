@@ -1,22 +1,23 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaPlus, FaBox, FaClipboardList } from "react-icons/fa";
+import { FaPlus, FaBox, FaClipboardList, FaUsers } from "react-icons/fa";
 import "./AdminLayout.css";
 
 const AdminLayout = ({ children }) => {
     const location = useLocation();
 
     useEffect(() => {
-        document.body.classList.add("admin-mode");
+        document.body.classList.add("adminmode");
 
         return () => {
-            document.body.classList.remove("admin-mode");
+            document.body.classList.remove("adminmode");
         };
     }, []);
 
     const menuItems = [
         { path: "/admindashboard/addproduct", label: "Add Product", icon: <FaPlus /> },
         { path: "/admindashboard/viewproduct", label: "Manage Product", icon: <FaBox /> },
+        { path: "/admindashboard/manage-users", label: "Manage User", icon: <FaUsers /> },
         { path: "/admindashboard/user", label: "Manage Order", icon: <FaClipboardList /> },
     ];
 

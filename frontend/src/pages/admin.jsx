@@ -10,10 +10,10 @@ function Admin() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.body.classList.add("admin-mode");
+        document.body.classList.add("adminmode");
 
         return () => {
-            document.body.classList.remove("admin-mode");
+            document.body.classList.remove("adminmode");
         };
     }, []);
 

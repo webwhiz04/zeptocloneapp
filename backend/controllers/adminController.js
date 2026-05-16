@@ -65,7 +65,7 @@ export const getAdminStats = async (req, res) => {
         
         let totalOrders = 0;
         let totalRevenue = 0;
-        const revenueBuckets = getLastNDaysBuckets(30);
+        const revenueBuckets = getLastNDaysBuckets(7);
         const revenueByDate = Object.fromEntries(revenueBuckets.map((bucket) => [bucket.key, bucket]));
         const statusBreakdown = {
             [STATUS_KEYS.placed]: 0,
@@ -113,5 +113,62 @@ export const getAdminStats = async (req, res) => {
     } catch (error) {
         console.error("Fetch Admin Stats Error:", error);
         return res.status(500).json({ message: "Server error while fetching admin stats" });
+    }
+};
+
+export const getAllUsers = async (req, res) => {
+    try {
+        // Use aggregation to get unique users by email
+        const users = await User.aggregate([
+            {
+                $group: {
+                    _id: "$email",
+                    userId: { $first: "$_id" },
+                    email: { $first: "$email" },
+                    isActive: { $first: "$isActive" },
+                    createdAt: { $first: "$createdAt" },
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            },
+            {
+                $project: {
+                    _id: "$userId",
+                    email: 1,
+                    isBanned: { $eq: ["$isActive", false] },
+                    createdAt: 1,
+                }
+            }
+        ]);
+        
+        return res.status(200).json({ users });
+    } catch (error) {
+        console.error("Get All Users Error:", error);
+        return res.status(500).json({ message: "Server error while fetching users" });
+    }
+};
+
+export const banUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        
+        // Toggle the isActive status
+        user.isActive = !user.isActive;
+        await user.save();
+        
+        return res.status(200).json({ 
+            message: user.isActive ? "User unbanned" : "User banned", 
+            user: { 
+                _id: user._id, 
+                isBanned: !user.isActive,
+                isActive: user.isActive 
+            } 
+        });
+    } catch (error) {
+        console.error("Ban User Error:", error);
+        return res.status(500).json({ message: "Server error while banning user" });
     }
 };

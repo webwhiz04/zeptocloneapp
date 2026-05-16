@@ -371,7 +371,7 @@ button.remove {
     box-shadow: 0 0 0 3px rgba(31, 154, 66, 0.1);
 }
 
-.footer {
+.cart .footer {
     display: flex;
     gap: 10px;
     padding: 20px;

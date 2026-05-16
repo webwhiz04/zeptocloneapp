@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useCart from "../hooks/useCart.js";
 import "./productdetail.css";
 import getImageUrl, { getPlaceholderUrl } from "../utils/imageUrl.js";
+import Footer from "../components/Footer.jsx";
 
 import API_BASE_URL from "../services/api";
 
@@ -129,7 +130,7 @@ function ProductDetailPage() {
                             <button
                                 key={image}
                                 type="button"
-                                className={`thumbnail-btn ${activeImage === image ? "active" : ""}`}
+                                className={`thumbnailBtn ${activeImage === image ? "active" : ""}`}
                                 onClick={() => setSelectedImage(image)}
                             >
                                 <img src={image} alt="thumbnail" />
@@ -183,6 +184,7 @@ function ProductDetailPage() {
                     </section>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }
